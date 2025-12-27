@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI分享会 - 零基础入门指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Slides Container */
+        .slides-container {
+            position: relative;
+            width: 90vw;
+            height: 85vh;
+            max-width: 1400px;
+            max-height: 900px;
+        }
+
+        /* Individual Slide */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: none;
+            overflow-y: auto;
+            overflow-x: hidden;
+            opacity: 0;
+            transform: translateX(100px) scale(0.95);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+
+        .slide.prev {
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateX(-100px) scale(0.95);
+        }
+
+        /* Slide Content Layout */
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3.2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: #764ba2;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        p, li {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 0.8rem;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 1rem;
+        }
+
+        /* Content Sections */
+        .main-point {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-left: 5px solid #667eea;
+            padding: 2rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+            font-size: 1.6rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-left: 5px solid #f093fb;
+            padding: 2rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.2);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            border-left: 5px solid #00bcd4;
+            padding: 2rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
+        }
+
+        /* Links */
+        a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            border-bottom-color: #667eea;
+            color: #764ba2;
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Emoji Icons */
+        .icon-large {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Navigation Controls */
+        .navigation {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .nav-button {
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .fullscreen-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        .fullscreen-btn:hover {
+            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.6);
+        }
+
+        .page-indicator {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .keyboard-hint {
+            position: fixed;
+            bottom: 0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 999;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        /* Fullscreen optimizations */
+        :fullscreen {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: none;
+        }
+
+        :fullscreen * {
+            cursor: none !important;
+        }
+
+        :fullscreen .slide {
+            padding: 2rem;
+        }
+
+        :fullscreen h1 {
+            font-size: 2.8rem;
+        }
+
+        :fullscreen h2 {
+            font-size: 2.2rem;
+        }
+
+        :fullscreen p, :fullscreen li {
+            font-size: 1.3rem;
+        }
+
+        /* Hide navigation in fullscreen */
+        :fullscreen .navigation {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        :fullscreen .keyboard-hint {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        :fullscreen .progress-container {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Show cursor when moving mouse in fullscreen */
+        :fullscreen.show-cursor {
+            cursor: auto;
+        }
+
+        :fullscreen.show-cursor * {
+            cursor: auto !important;
+        }
+
+        /* Progress bar hover effect for normal mode */
+        .progress-container:hover {
+            height: 8px;
+        }
+
+        /* Scrollbar styling */
+        .slide::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slide::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        .slide::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 4px;
+        }
+
+        .slide::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.5);
+        }
+
+        /* Center content for single-point slides */
+        .center-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Page number indicator for fullscreen (subtle) */
+        .page-number-fullscreen {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            z-index: 998;
+            user-select: none;
+        }
+
+        :fullscreen .page-number-fullscreen {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Cursor hiding timer */
+        .cursor-timer {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.8rem;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 997;
+        }
+
+        :fullscreen .cursor-timer {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="slides-container">
+            <!-- 第1页：封面 -->
+            <div class="slide active" data-slide="1">
+                <div class="slide-content center-content">
+                    <div class="icon-large">🤖</div>
+                    <h1>AI零基础入门指南</h1>
+                    <div class="main-point">
+                        新时代的个人生产力革命
+                    </div>
+                    <div class="info-box">
+                        <h3>🎯 适合人群</h3>
+                        <p>AI零基础但想要提升工作效率的朋友</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第2页：分享大纲 -->
+            <div class="slide" data-slide="2">
+                <div class="slide-content">
+                    <h2>📋 分享内容</h2>
+                    <div class="main-point">
+                        <ul>
+                            <li>🌐 AI常用工具与平台介绍</li>
+                            <li>💻 IDE环境的优势与价值</li>
+                            <li>🎮 Vibe Coding：新时代办公方式</li>
+                            <li>🔄 个人工作流重构实践</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第3页：开发环境 -->
+            <div class="slide" data-slide="3">
+                <div class="slide-content">
+                    <h2>💻 AI开发环境</h2>
+                    <div class="two-column">
+                        <div class="main-point">
+                            <h3>🔧 什么是IDE？</h3>
+                            <p>集成开发环境（Integrated Development Environment）</p>
+                            <p>集代码编辑、调试、版本控制于一体的专业工具</p>
+                        </div>
+                        <div class="info-box">
+                            <h3>🌟 CodeBuddy CN</h3>
+                            <a href="https://codebuddy.cn" target="_blank">https://codebuddy.cn</a>
+                            <p>国产AI编程助手平台</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第4页：API Key介绍 -->
+            <div class="slide" data-slide="4">
+                <div class="slide-content">
+                    <h2>🔑 API Key获取</h2>
+                    <div class="main-point">
+                        <h3>什么是API Key？</h3>
+                        <p>调用AI服务的"身份证"</p>
+                        <ul>
+                            <li>用于验证使用权限</li>
+                            <li>控制使用量和计费</li>
+                            <li>每个服务商独立管理</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <p>⚠️ 需要妥善保管，避免泄露</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第5页：AI服务商 -->
+            <div class="slide" data-slide="5">
+                <div class="slide-content">
+                    <h2>🌟 常用AI服务商</h2>
+                    <div class="main-point">
+                        <div class="two-column">
+                            <div>
+                                <h3>🌟 DeepSeek</h3>
+                                <a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a>
+                                <p>国产领先AI大模型</p>
+                            </div>
+                            <div>
+                                <h3>🌙 KIMI</h3>
+                                <a href="https://kimi.moonshot.cn" target="_blank">kimi.moonshot.cn</a>
+                                <p>长文本处理专家</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <h3>🔥 豆包</h3>
+                        <a href="https://www.doubao.com" target="_blank">www.doubao.com</a>
+                        <p>字节跳动AI助手</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第6页：Python介绍 -->
+            <div class="slide" data-slide="6">
+                <div class="slide-content">
+                    <h2>🐍 Python编程语言</h2>
+                    <div class="two-column">
+                        <div class="main-point">
+                            <h3>📖 什么是Python？</h3>
+                            <ul>
+                                <li>高级编程语言</li>
+                                <li>语法简洁，易学易用</li>
+                                <li>丰富的库生态</li>
+                                <li>跨平台支持</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h3>🚀 能做什么？</h3>
+                            <ul>
+                                <li>AI/机器学习</li>
+                                <li>数据分析</li>
+                                <li>Web开发</li>
+                                <li>自动化脚本</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第7页：Python下载 -->
+            <div class="slide" data-slide="7">
+                <div class="slide-content center-content">
+                    <h2>📥 Python下载</h2>
+                    <div class="main-point">
+                        <h3>🌐 官方网站</h3>
+                        <a href="https://www.python.org" target="_blank" style="font-size: 1.8rem;">www.python.org</a>
+                        <p>推荐版本：Python 3.11+</p>
+                    </div>
+                    <div class="info-box">
+                        <p>💡 国内可使用清华大学镜像站</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第8页：IDE集成AI优势 -->
+            <div class="slide" data-slide="8">
+                <div class="slide-content">
+                    <h2>🆚 IDE集成AI vs 对话框AI</h2>
+                    <div class="main-point">
+                        <div class="two-column">
+                            <div>
+                                <h3>✅ IDE集成AI</h3>
+                                <ul>
+                                    <li>上下文感知</li>
+                                    <li>实时协作</li>
+                                    <li>直接文件操作</li>
+                                    <li>版本控制集成</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3>❌ 对话框AI</h3>
+                                <ul>
+                                    <li>缺乏上下文</li>
+                                    <li>需要复制粘贴</li>
+                                    <li>单一对话模式</li>
+                                    <li>文件管理困难</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第9页：IDE好处 -->
+            <div class="slide" data-slide="9">
+                <div class="slide-content">
+                    <h2>🎯 IDE集成AI的好处</h2>
+                    <div class="main-point">
+                        <ul>
+                            <li>⚡ <strong>效率提升</strong>：减少上下文切换</li>
+                            <li>🎯 <strong>精准理解</strong>：基于实际代码给出建议</li>
+                            <li>🔄 <strong>快速迭代</strong>：即时验证和调整</li>
+                            <li>🛠️ <strong>专业工具</strong>：完整的开发环境</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第10页：学习路径 -->
+            <div class="slide" data-slide="10">
+                <div class="slide-content">
+                    <h2>🛤️ 初学者学习路径</h2>
+                    <div class="main-point">
+                        <ol>
+                            <li>📚 掌握基础编程概念</li>
+                            <li>💻 熟悉IDE基本操作</li>
+                            <li>🤖 学习AI提示词工程基础</li>
+                            <li>🎯 实践AI辅助的小项目</li>
+                            <li>🚀 逐步掌握高级AI功能</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第11页：Vibe Coding介绍 -->
+            <div class="slide" data-slide="11">
+                <div class="slide-content">
+                    <h2>🎮 Vibe Coding：新时代的办公三件套</h2>
+                    <div class="two-column">
+                        <div class="main-point">
+                            <h3>📊 传统三件套</h3>
+                            <ul>
+                                <li>Excel → 数据处理</li>
+                                <li>PPT → 内容展示</li>
+                                <li>Word → 文档编辑</li>
+                            </ul>
+                        </div>
+                        <div class="highlight-box">
+                            <h3>🤖 AI时代三件套</h3>
+                            <ul>
+                                <li>Excel → AI数据分析</li>
+                                <li>PPT → AI内容创作</li>
+                                <li>Word → AI智能写作</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第12页：Vibe Coding价值 -->
+            <div class="slide" data-slide="12">
+                <div class="slide-content">
+                    <h2>💡 Vibe Coding的核心价值</h2>
+                    <div class="main-point">
+                        <ul>
+                            <li>🔄 <strong>编程平民化</strong>：自然语言替代代码语法</li>
+                            <li>🎯 <strong>创意实现</strong>：想法快速变为现实</li>
+                            <li>📈 <strong>工作流重构</strong>：重新定义工作方式</li>
+                            <li>🚀 <strong>生产力革命</strong>：大幅提升效率</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第13页：AI游戏化特性 -->
+            <div class="slide" data-slide="13">
+                <div class="slide-content">
+                    <h2>🎮 为什么使用AI会上瘾？</h2>
+                    <div class="main-point">
+                        <ul>
+                            <li>⚡ <strong>即时可见</strong>：输入指令后立即得到结果</li>
+                            <li>🔄 <strong>快速迭代</strong>：可以不断调整、优化、改进</li>
+                            <li>🎯 <strong>成就感</strong>：看到想法快速变为现实</li>
+                            <li>🎲 <strong>探索乐趣</strong>：每次尝试都可能带来惊喜</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第14页：游戏化本质 -->
+            <div class="slide" data-slide="14">
+                <div class="slide-content">
+                    <h2>🎮 游戏化的本质</h2>
+                    <div class="main-point">
+                        <ol>
+                            <li>🎯 <strong>清晰的目标</strong>：完成某个任务</li>
+                            <li>⚡ <strong>即时反馈</strong>：AI响应和结果</li>
+                            <li>🔄 <strong>持续改进</strong>：迭代优化</li>
+                            <li>🏆 <strong>成就系统</strong>：项目完成、技能提升</li>
+                        </ol>
+                    </div>
+                    <div class="info-box">
+                        <p>这种游戏化特性使AI学习变得：</p>
+                        <p>📚 入手容易 | 😊 过程有趣 | ⚡ 效率提升 | 🔄 乐此不疲</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第15页：AI学习价值观 -->
+            <div class="slide" data-slide="15">
+                <div class="slide-content">
+                    <h2>🎯 AI学习的价值观</h2>
+                    <div class="main-point">
+                        <h3>🔍 关键认知</h3>
+                        <ul>
+                            <li>AI玩的熟 ≠ 功利意义上的收获</li>
+                            <li>喜欢玩也很重要</li>
+                            <li>过程价值 > 结果价值</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-box">
+                        <h3>💡 正确心态</h3>
+                        <p>AI学习应该是一种快乐的过程，而不是功利的工具。保持好奇心和学习热情最重要！</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第16页：工作流重构意义 -->
+            <div class="slide" data-slide="16">
+                <div class="slide-content">
+                    <h2>🔄 工作流重构的意义</h2>
+                    <div class="main-point">
+                        <ul>
+                            <li>⚡ <strong>效率提升</strong>：自动化重复性工作</li>
+                            <li>🎨 <strong>创意释放</strong>：专注于核心创造</li>
+                            <li>✨ <strong>质量改善</strong>：AI辅助优化结果</li>
+                            <li>💰 <strong>成本降低</strong>：减少时间和精力投入</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第17页：重构步骤 -->
+            <div class="slide" data-slide="17">
+                <div class="slide-content">
+                    <h2>🛠️ 重构实践步骤</h2>
+                    <div class="main-point">
+                        <ol>
+                            <li>📋 <strong>分析现有流程</strong>：识别可优化环节</li>
+                            <li>🤖 <strong>选择合适的AI工具</strong>：匹配需求场景</li>
+                            <li>🔄 <strong>逐步集成AI</strong>：小规模试点</li>
+                            <li>📊 <strong>评估效果</strong>：数据驱动的优化</li>
+                            <li>🚀 <strong>规模化推广</strong>：全面重构工作流</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第18页：人与人合作 -->
+            <div class="slide" data-slide="18">
+                <div class="slide-content">
+                    <h2>🤝 AI时代的人与人合作</h2>
+                    <div class="main-point">
+                        <div class="two-column">
+                            <div>
+                                <h3>💝 合作重要性</h3>
+                                <ul>
+                                    <li>互补优势</li>
+                                    <li>知识共享</li>
+                                    <li>项目协作</li>
+                                    <li>社群建设</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3>🌐 项目共享价值</h3>
+                                <ul>
+                                    <li>接受检验</li>
+                                    <li>知识沉淀</li>
+                                    <li>建立连接</li>
+                                    <li>持续改进</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第19页：AI幻觉问题 -->
+            <div class="slide" data-slide="19">
+                <div class="slide-content">
+                    <h2>👻 AI的幻觉问题</h2>
+                    <div class="main-point">
+                        <h3>🔍 什么是AI幻觉？</h3>
+                        <ul>
+                            <li>生成看似合理但实际错误的信息</li>
+                            <li>表现：事实错误、逻辑矛盾、虚构内容</li>
+                            <li>原因：训练数据局限、概率生成机制</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <p>⚠️ 需要人工审核和验证机制</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第20页：约束机制 -->
+            <div class="slide" data-slide="20">
+                <div class="slide-content">
+                    <h2>🛡️ 必要的约束机制</h2>
+                    <div class="main-point">
+                        <ul>
+                            <li>🌍 <strong>真实世界限制</strong>：物理规律约束</li>
+                            <li>📊 <strong>真实数据限制</strong>：基于事实验证</li>
+                            <li>⚖️ <strong>伦理道德约束</strong>：社会规范限制</li>
+                            <li>🔍 <strong>人工审核机制</strong>：人工验证把关</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第21页：代码廉价化 -->
+            <div class="slide" data-slide="21">
+                <div class="slide-content">
+                    <h2>💻 代码廉价化的意义</h2>
+                    <div class="main-point">
+                        <h3>⚡ Vibe Coding特点</h3>
+                        <ul>
+                            <li>💻 <strong>一次使用</strong>：代码运行一次即丢弃</li>
+                            <li>🆓 <strong>生成成本低</strong>：不介意代码有缺陷</li>
+                            <li>🎲 <strong>容忍不稳定</strong>：输出不稳定性可接受</li>
+                            <li>🔄 <strong>重试成本低</strong>：多次运行寻找满意结果</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第22页：传统vs现代 -->
+            <div class="slide" data-slide="22">
+                <div class="slide-content">
+                    <h2>🔄 传统开发 vs Vibe Coding</h2>
+                    <div class="two-column">
+                        <div class="main-point">
+                            <h3>🏛️ 传统开发</h3>
+                            <ul>
+                                <li>千万人使用</li>
+                                <li>考虑周到</li>
+                                <li>不能出错</li>
+                                <li>部署谨慎</li>
+                            </ul>
+                        </div>
+                        <div class="highlight-box">
+                            <h3>⚡ Vibe Coding</h3>
+                            <ul>
+                                <li>个人使用</li>
+                                <li>快速迭代</li>
+                                <li>容错性强</li>
+                                <li>即时部署</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第23页：新开发思维 -->
+            <div class="slide" data-slide="23">
+                <div class="slide-content">
+                    <h2>🎯 新的开发思维</h2>
+                    <div class="main-point center-content">
+                        <h3>🚀 每个普通人都要有开发产品、开发代码的意识和思维</h3>
+                        <p>这不是要取代专业开发，而是让每个人都能用代码解决自己的问题，提升个人生产力。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第24页：个人需求背景 -->
+            <div class="slide" data-slide="24">
+                <div class="slide-content">
+                    <h2>🎯 个人案例分析</h2>
+                    <div class="main-point">
+                        <h3>📝 我的核心需求</h3>
+                        <ul>
+                            <li>📰 <strong>微信公众号</strong>：奇迹笔记</li>
+                            <li>🔬 <strong>科学新闻阅读</strong>：硬核科技内容</li>
+                            <li>📊 <strong>内容发布</strong>：微信公众号文章</li>
+                            <li>🎤 <strong>迷你课程</strong>：特定主题分享</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第25页：AI服务需求 -->
+            <div class="slide" data-slide="25">
+                <div class="slide-content">
+                    <h2>🤖 AI服务我的需求</h2>
+                    <div class="main-point">
+                        <div class="two-column">
+                            <div>
+                                <h3>📚 知识获取</h3>
+                                <p>科学新闻处理</p>
+                            </div>
+                            <div>
+                                <h3>✍️ 内容创作</h3>
+                                <p>文章生成</p>
+                            </div>
+                            <div>
+                                <h3>📖 知识打包</h3>
+                                <p>课程制作</p>
+                            </div>
+                            <div>
+                                <h3>🔍 课题研究</h3>
+                                <p>深度分析</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第26页：关键洞察 -->
+            <div class="slide" data-slide="26">
+                <div class="slide-content">
+                    <h2>🌟 关键洞察</h2>
+                    <div class="main-point center-content">
+                        <h3>💡 不同人的需求千差万别</h3>
+                        <p>在我的需求中，视觉设计不重要</p>
+                        <p>核心是：知识学习 + 产品分享 + 社群开发</p>
+                        <p>🎯 找到自己的核心需求，才能最大化AI的价值</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第27页：资源链接 -->
+            <div class="slide" data-slide="27">
+                <div class="slide-content center-content">
+                    <h2>🔗 相关资源</h2>
+                    <div class="main-point">
+                        <h3>🌐 GitHub</h3>
+                        <a href="https://jiyanjiang.github.io/news/physicsworld.html" target="_blank" style="font-size: 1.5rem;">jiyanjiang.github.io/news/physicsworld.html</a>
+                    </div>
+                    <div class="info-box">
+                        <h3>📱 微信公众号</h3>
+                        <p style="font-size: 1.5rem;">🥇 奇迹笔记</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第28页：总结 -->
+            <div class="slide" data-slide="28">
+                <div class="slide-content center-content">
+                    <h2>🎉 总结</h2>
+                    <div class="main-point">
+                        <h3>🌟 AI时代的机遇</h3>
+                        <ul>
+                            <li>🤖 AI是新时代的"办公三件套"</li>
+                            <li>🎮 Vibe Coding重构工作流程</li>
+                            <li>🤝 保持人与人合作的重要性</li>
+                            <li>🎯 找到并专注自己的核心需求</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-box">
+                        <h3>🚀 开始你的AI之旅吧！</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第29页：Q&A -->
+            <div class="slide" data-slide="29">
+                <div class="slide-content center-content">
+                    <div class="icon-large">❓</div>
+                    <h1>Q&A</h1>
+                    <div class="main-point">
+                        <h3>🙋‍♂️ 欢迎提问</h3>
+                        <p>让我们一起探索AI的无限可能！</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第30页：感谢 -->
+            <div class="slide" data-slide="30">
+                <div class="slide-content center-content">
+                    <div class="icon-large">🙏</div>
+                    <h1>感谢聆听！</h1>
+                    <div class="main-point">
+                        <h3>🌟 期待与您一起成长</h3>
+                        <p>在AI的时代浪潮中共同进步</p>
+                    </div>
+                    <div class="info-box">
+                        <h3>📱 微信公众号：奇迹笔记</h3>
+                        <p>🌐 GitHub: jiyanjiang.github.io</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="navigation">
+        <button class="nav-button" id="prevButton" aria-label="上一页">❮</button>
+        <div class="page-indicator" id="pageIndicator">1 / 30</div>
+        <button class="nav-button" id="nextButton" aria-label="下一页">❯</button>
+        <button class="nav-button fullscreen-btn" id="fullscreenButton" aria-label="全屏演示">⛶</button>
+    </div>
+
+    <div class="keyboard-hint">键盘：←→↑↓ | PageUp/Down | 空格/回车 | P/K/N/J | F5全屏</div>
+
+    <!-- Page number for fullscreen mode -->
+    <div class="page-number-fullscreen" id="pageNumberFullscreen">1 / 30</div>
+
+    <!-- Cursor timer indicator -->
+    <div class="cursor-timer" id="cursorTimer">鼠标隐藏中</div>
+
+    <script>
+        class Slideshow {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentSlide = 0;
+                this.totalSlides = this.slides.length;
+                
+                this.prevButton = document.getElementById('prevButton');
+                this.nextButton = document.getElementById('nextButton');
+                this.fullscreenButton = document.getElementById('fullscreenButton');
+                this.pageIndicator = document.getElementById('pageIndicator');
+                this.pageNumberFullscreen = document.getElementById('pageNumberFullscreen');
+                this.cursorTimer = document.getElementById('cursorTimer');
+                this.progressBar = document.getElementById('progressBar');
+                
+                // Cursor hiding variables
+                this.cursorHideTimer = null;
+                this.cursorTimeout = 3000; // 3 seconds
+                
+                this.init();
+            }
+
+            init() {
+                this.updateSlideDisplay();
+                this.bindEvents();
+                this.setupCursorHiding();
+            }
+
+            goToSlide(index) {
+                if (index < 0 || index >= this.totalSlides) return;
+                
+                // Remove active class from current slide
+                this.slides[this.currentSlide].classList.remove('active');
+                this.slides[this.currentSlide].classList.add('prev');
+                
+                // Update current slide index
+                this.currentSlide = index;
+                
+                // Add active class to new slide
+                this.slides[this.currentSlide].classList.remove('prev');
+                this.slides[this.currentSlide].classList.add('active');
+                
+                this.updateSlideDisplay();
+            }
+
+            nextSlide() {
+                if (this.currentSlide < this.totalSlides - 1) {
+                    this.goToSlide(this.currentSlide + 1);
+                }
+            }
+
+            prevSlide() {
+                if (this.currentSlide > 0) {
+                    this.goToSlide(this.currentSlide - 1);
+                }
+            }
+
+            updateSlideDisplay() {
+                // Update page indicators
+                this.pageIndicator.textContent = `${this.currentSlide + 1} / ${this.totalSlides}`;
+                this.pageNumberFullscreen.textContent = `${this.currentSlide + 1} / ${this.totalSlides}`;
+                
+                // Update progress bar
+                const progress = ((this.currentSlide + 1) / this.totalSlides) * 100;
+                this.progressBar.style.width = `${progress}%`;
+                
+                // Update button states
+                this.prevButton.disabled = this.currentSlide === 0;
+                this.nextButton.disabled = this.currentSlide === this.totalSlides - 1;
+            }
+
+            setupCursorHiding() {
+                // Setup cursor hiding for fullscreen mode
+                document.addEventListener('mousemove', () => {
+                    this.resetCursorTimer();
+                    if (document.fullscreenElement) {
+                        document.documentElement.classList.add('show-cursor');
+                    }
+                });
+
+                // Also handle mouse movement on any element
+                document.addEventListener('mousedown', () => {
+                    if (document.fullscreenElement) {
+                        document.documentElement.classList.add('show-cursor');
+                    }
+                });
+
+                // Handle fullscreen change events
+                document.addEventListener('fullscreenchange', () => {
+                    if (document.fullscreenElement) {
+                        this.resetCursorTimer();
+                    } else {
+                        // Reset cursor when exiting fullscreen
+                        document.documentElement.classList.remove('show-cursor');
+                        this.clearCursorTimer();
+                    }
+                });
+            }
+
+            resetCursorTimer() {
+                this.clearCursorTimer();
+                
+                if (document.fullscreenElement) {
+                    this.cursorTimer.textContent = '鼠标显示中';
+                    
+                    this.cursorHideTimer = setTimeout(() => {
+                        document.documentElement.classList.remove('show-cursor');
+                        this.cursorTimer.textContent = '鼠标隐藏中';
+                    }, this.cursorTimeout);
+                }
+            }
+
+            clearCursorTimer() {
+                if (this.cursorHideTimer) {
+                    clearTimeout(this.cursorHideTimer);
+                    this.cursorHideTimer = null;
+                }
+            }
+
+            bindEvents() {
+                // Button click events
+                this.prevButton.addEventListener('click', () => this.prevSlide());
+                this.nextButton.addEventListener('click', () => this.nextSlide());
+                this.fullscreenButton.addEventListener('click', () => this.toggleFullscreen());
+
+                // 监听全屏状态变化
+                document.addEventListener('fullscreenchange', () => {
+                    if (document.fullscreenElement) {
+                        this.fullscreenButton.innerHTML = '⛶';
+                        this.fullscreenButton.setAttribute('aria-label', '退出全屏');
+                        this.resetCursorTimer();
+                    } else {
+                        this.fullscreenButton.innerHTML = '⛶';
+                        this.fullscreenButton.setAttribute('aria-label', '全屏演示');
+                        document.documentElement.classList.remove('show-cursor');
+                        this.clearCursorTimer();
+                    }
+                });
+                
+                // Keyboard events - 支持翻页笔常见按键
+                document.addEventListener('keydown', (e) => {
+                    // 防止在输入框中触发键盘事件
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                        return;
+                    }
+
+                    // 下一页按键：右箭头、下箭头、空格、回车、PageDown、N/J键
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || 
+                        e.key === 'Enter' || e.key === 'PageDown' || e.key === 'n' || e.key === 'N' || 
+                        e.key === 'j' || e.key === 'J') {
+                        e.preventDefault();
+                        this.nextSlide();
+                        // Reset cursor timer on keyboard navigation
+                        this.resetCursorTimer();
+                    } 
+                    // 上一页按键：左箭头、上箭头、PageUp、P/K键
+                    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp' || 
+                             e.key === 'p' || e.key === 'P' || e.key === 'k' || e.key === 'K') {
+                        e.preventDefault();
+                        this.prevSlide();
+                        // Reset cursor timer on keyboard navigation
+                        this.resetCursorTimer();
+                    } 
+                    // 首页：Home键
+                    else if (e.key === 'Home') {
+                        e.preventDefault();
+                        this.goToSlide(0);
+                        this.resetCursorTimer();
+                    } 
+                    // 尾页：End键
+                    else if (e.key === 'End') {
+                        e.preventDefault();
+                        this.goToSlide(this.totalSlides - 1);
+                        this.resetCursorTimer();
+                    }
+                    // 全屏切换：F5、ESC键
+                    else if (e.key === 'F5' || e.key === 'Escape') {
+                        if (!document.fullscreenElement) {
+                            document.documentElement.requestFullscreen().catch(err => {
+                                console.log('无法进入全屏模式:', err);
+                            });
+                        } else {
+                            document.exitFullscreen();
+                        }
+                    }
+                });
+
+                // Touch/Swipe support
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                document.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                document.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    this.handleSwipe();
+                }, { passive: true });
+
+                this.handleSwipe = () => {
+                    const swipeThreshold = 50;
+                    const diff = touchStartX - touchEndX;
+                    
+                    if (Math.abs(diff) > swipeThreshold) {
+                        if (diff > 0) {
+                            this.nextSlide();
+                        } else {
+                            this.prevSlide();
+                        }
+                        // Reset cursor timer on swipe
+                        this.resetCursorTimer();
+                    }
+                };
+            }
+
+            toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log('无法进入全屏模式:', err);
+                    });
+                    this.fullscreenButton.innerHTML = '⛶';
+                    this.fullscreenButton.setAttribute('aria-label', '退出全屏');
+                } else {
+                    document.exitFullscreen();
+                    this.fullscreenButton.innerHTML = '⛶';
+                    this.fullscreenButton.setAttribute('aria-label', '全屏演示');
+                }
+            }
+        }
+
+        // Initialize slideshow when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new Slideshow();
+        });
+    </script>
+</body>
+</html>
