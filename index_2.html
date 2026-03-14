@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Jiyanjiang.GitHub.io : My personal page.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Jiyanjiang.GitHub.io</title>
+    
+    <style>
+        /* 内联样式 - 美化版本 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 
+                         'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .outer {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header 样式 */
+        #header_wrap {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 60px 40px;
+            margin-top: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        #header_wrap::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 300% 300%;
+            animation: gradient 8s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        #forkme_banner {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            margin-bottom: 20px;
+        }
+
+        #forkme_banner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        #project_title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        #project_tagline {
+            font-size: 20px;
+            font-weight: 400;
+            color: #7f8c8d;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        /* 主内容区域 */
+        #main_content_wrap {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 50px 40px;
+            margin: 30px 0;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #main_content h3 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid;
+            border-image: linear-gradient(90deg, #667eea, #764ba2) 1;
+            position: relative;
+        }
+
+        #main_content p {
+            font-size: 16px;
+            line-height: 2;
+            margin-bottom: 18px;
+            color: #555;
+            padding-left: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        #main_content p:hover {
+            color: #667eea;
+            padding-left: 25px;
+        }
+
+        #main_content p::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        #main_content a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        #main_content a:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            color: #764ba2;
+        }
+
+        .user-mention {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            color: #764ba2 !important;
+        }
+
+        #main_content img {
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 3px solid white;
+        }
+
+        #main_content img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer 样式 */
+        #footer_wrap {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px 40px;
+            margin-bottom: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        #footer_wrap p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        #footer_wrap a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        #footer_wrap a:hover {
+            color: #764ba2;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .outer {
+                padding: 0 15px;
+            }
+
+            #header_wrap {
+                padding: 40px 25px;
+                margin-top: 20px;
+            }
+
+            #project_title {
+                font-size: 36px;
+            }
+
+            #project_tagline {
+                font-size: 18px;
+            }
+
+            #main_content_wrap {
+                padding: 35px 25px;
+            }
+
+            #main_content h3 {
+                font-size: 26px;
+            }
+
+            #main_content p {
+                font-size: 15px;
+            }
+
+            #main_content img {
+                width: 180px;
+                float: none;
+                display: block;
+                margin: 20px auto;
+            }
+
+            #footer_wrap {
+                padding: 25px 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* 平板设备优化 */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            #project_title {
+                font-size: 42px;
+            }
+
+            #main_content img {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+            <a id="forkme_banner" href="https://github.com/jiyanjiang">View on GitHub</a>
+
+            <h1 id="project_title">Jiyanjiang.GitHub.io</h1>
+            <h2 id="project_tagline">My personal page.</h2>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+            <h3>
+                <a id="my-notes" class="anchor" href="#my-notes" aria-hidden="true">
+                    <span class="octicon octicon-link"></span>
+                </a>
+                My Notes
+            </h3>
+
+            <p>量子序曲 <a href="https://github.com/jiyanjiang/QuantumPrelude">https://github.com/jiyanjiang/QuantumPrelude</a></p>
+
+            <p>高等量子力学 <a href="https://github.com/jiyanjiang/AQM2014">https://github.com/jiyanjiang/AQM2014</a></p>
+
+            <p><a href="http://jiyanjiang.github.io/MyBlogs">MyBlogs</a> <a href="https://github.com/jiyanjiang" class="user-mention">@jiyanjiang</a></p>
+
+            <img src="https://jiyanjiang.github.io/images/contact.png" alt="Contact" width="220">
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <div id="footer_wrap" class="outer">
+        <footer class="inner">
+            <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+
+</html>
