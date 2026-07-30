@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1000px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#d32f2f", "id": "leading order", "label": "leading order", "shape": "dot", "size": 23.09375, "title": "leading order | doc_freq=184 | log10 p=-2.87 | \u0394\u4efd\u989d=+1.15e-04 | log2FC=+0.13"}, {"color": "#1565c2", "id": "heavy quark", "label": "heavy quark", "shape": "dot", "size": 21.96875, "title": "heavy quark | doc_freq=172 | log10 p=-2.90 | \u0394\u4efd\u989d=-3.28e-04 | log2FC=-0.33"}, {"color": "#1565c2", "id": "calabi yau", "label": "calabi yau", "shape": "dot", "size": 9.5, "title": "calabi yau | doc_freq=39 | log10 p=-3.54 | \u0394\u4efd\u989d=-2.02e-04 | log2FC=-0.76"}, {"color": "#e3e7ec", "id": "fixed points", "label": "fixed points", "shape": "dot", "size": 9.40625, "title": "fixed points | doc_freq=38 | log10 p=-3.55 | \u0394\u4efd\u989d=-2.31e-06 | log2FC=-0.01"}, {"color": "#1565c2", "id": "effective theory", "label": "effective theory", "shape": "dot", "size": 14.5625, "title": "effective theory | doc_freq=93 | log10 p=-3.17 | \u0394\u4efd\u989d=-2.28e-04 | log2FC=-0.41"}, {"color": "#d32f2f", "id": "cross section", "label": "cross section", "shape": "dot", "size": 26.09375, "title": "cross section | doc_freq=216 | log10 p=-2.80 | \u0394\u4efd\u989d=+4.08e-04 | log2FC=+0.43"}, {"color": "#1565c2", "id": "minimal supersymmetric", "label": "minimal supersymmetric", "shape": "dot", "size": 14.65625, "title": "minimal supersymmetric | doc_freq=94 | log10 p=-3.16 | \u0394\u4efd\u989d=-1.76e-04 | log2FC=-0.33"}, {"color": "#1565c2", "id": "size scaling", "label": "size scaling", "shape": "dot", "size": 11.5625, "title": "size scaling | doc_freq=61 | log10 p=-3.35 | \u0394\u4efd\u989d=-1.15e-04 | log2FC=-0.33"}, {"color": "#d32f2f", "id": "sum rules", "label": "sum rules", "shape": "dot", "size": 18.21875, "title": "sum rules | doc_freq=132 | log10 p=-3.01 | \u0394\u4efd\u989d=+3.17e-04 | log2FC=+0.57"}, {"color": "#1565c2", "id": "finite temperature", "label": "finite temperature", "shape": "dot", "size": 19.34375, "title": "finite temperature | doc_freq=144 | log10 p=-2.98 | \u0394\u4efd\u989d=-2.97e-04 | log2FC=-0.36"}, {"color": "#5d93d1", "id": "renormalization group", "label": "renormalization group", "shape": "dot", "size": 28.8125, "title": "renormalization group | doc_freq=245 | log10 p=-2.75 | \u0394\u4efd\u989d=-2.97e-05 | log2FC=-0.02"}, {"color": "#1565c2", "id": "first order", "label": "first order", "shape": "dot", "size": 26.0, "title": "first order | doc_freq=215 | log10 p=-2.80 | \u0394\u4efd\u989d=-4.35e-04 | log2FC=-0.35"}, {"color": "#1565c2", "id": "black holes", "label": "black holes", "shape": "dot", "size": 24.6875, "title": "black holes | doc_freq=201 | log10 p=-2.83 | \u0394\u4efd\u989d=-3.82e-04 | log2FC=-0.33"}, {"color": "#1565c2", "id": "effective potential", "label": "effective potential", "shape": "dot", "size": 14.09375, "title": "effective potential | doc_freq=88 | log10 p=-3.19 | \u0394\u4efd\u989d=-3.01e-04 | log2FC=-0.55"}, {"color": "#1565c2", "id": "phase transitions", "label": "phase transitions", "shape": "dot", "size": 14.46875, "title": "phase transitions | doc_freq=92 | log10 p=-3.17 | \u0394\u4efd\u989d=-1.17e-04 | log2FC=-0.23"}, {"color": "#d32f2f", "id": "order parameter", "label": "order parameter", "shape": "dot", "size": 14.9375, "title": "order parameter | doc_freq=97 | log10 p=-3.15 | \u0394\u4efd\u989d=+6.07e-05 | log2FC=+0.13"}, {"color": "#d32f2f", "id": "mirror symmetry", "label": "mirror symmetry", "shape": "dot", "size": 9.6875, "title": "mirror symmetry | doc_freq=41 | log10 p=-3.52 | \u0394\u4efd\u989d=+7.89e-05 | log2FC=+0.43"}, {"color": "#d32f2f", "id": "structure formation", "label": "structure formation", "shape": "dot", "size": 10.34375, "title": "structure formation | doc_freq=48 | log10 p=-3.45 | \u0394\u4efd\u989d=+5.62e-05 | log2FC=+0.25"}, {"color": "#1565c2", "id": "finite size", "label": "finite size", "shape": "dot", "size": 17.9375, "title": "finite size | doc_freq=129 | log10 p=-3.02 | \u0394\u4efd\u989d=-1.19e-04 | log2FC=-0.17"}, {"color": "#1565c2", "id": "space time", "label": "space time", "shape": "dot", "size": 23.46875, "title": "space time | doc_freq=188 | log10 p=-2.86 | \u0394\u4efd\u989d=-6.25e-04 | log2FC=-0.54"}, {"color": "#1565c2", "id": "finite size scaling", "label": "finite size scaling", "shape": "dot", "size": 11.46875, "title": "finite size scaling | doc_freq=60 | log10 p=-3.36 | \u0394\u4efd\u989d=-1.22e-04 | log2FC=-0.35"}, {"color": "#1565c2", "id": "gauge theories", "label": "gauge theories", "shape": "dot", "size": 20.46875, "title": "gauge theories | doc_freq=156 | log10 p=-2.94 | \u0394\u4efd\u989d=-5.42e-04 | log2FC=-0.56"}, {"color": "#1565c2", "id": "form factors", "label": "form factors", "shape": "dot", "size": 15.78125, "title": "form factors | doc_freq=106 | log10 p=-3.11 | \u0394\u4efd\u989d=-2.36e-04 | log2FC=-0.38"}, {"color": "#d43838", "id": "coupling constant", "label": "coupling constant", "shape": "dot", "size": 22.4375, "title": "coupling constant | doc_freq=177 | log10 p=-2.89 | \u0394\u4efd\u989d=+4.10e-05 | log2FC=+0.05"}, {"color": "#d32f2f", "id": "scalar field", "label": "scalar field", "shape": "dot", "size": 24.96875, "title": "scalar field | doc_freq=204 | log10 p=-2.82 | \u0394\u4efd\u989d=+1.35e-04 | log2FC=+0.14"}, {"color": "#e6b6b6", "id": "second order", "label": "second order", "shape": "dot", "size": 20.65625, "title": "second order | doc_freq=158 | log10 p=-2.94 | \u0394\u4efd\u989d=+1.26e-05 | log2FC=+0.02"}, {"color": "#c2d2e5", "id": "event horizon", "label": "event horizon", "shape": "dot", "size": 8.375, "title": "event horizon | doc_freq=27 | log10 p=-3.70 | \u0394\u4efd\u989d=-9.04e-06 | log2FC=-0.06"}, {"color": "#1565c2", "id": "higgs boson", "label": "higgs boson", "shape": "dot", "size": 16.25, "title": "higgs boson | doc_freq=111 | log10 p=-3.09 | \u0394\u4efd\u989d=-1.84e-04 | log2FC=-0.29"}, {"color": "#e6b8b8", "id": "fractional quantum", "label": "fractional quantum", "shape": "dot", "size": 9.96875, "title": "fractional quantum | doc_freq=44 | log10 p=-3.49 | \u0394\u4efd\u989d=+1.21e-05 | log2FC=+0.05"}, {"color": "#1565c2", "id": "chern simons", "label": "chern simons", "shape": "dot", "size": 19.90625, "title": "chern simons | doc_freq=150 | log10 p=-2.96 | \u0394\u4efd\u989d=-7.04e-04 | log2FC=-0.71"}, {"color": "#1565c2", "id": "parameter space", "label": "parameter space", "shape": "dot", "size": 15.59375, "title": "parameter space | doc_freq=104 | log10 p=-3.12 | \u0394\u4efd\u989d=-1.84e-04 | log2FC=-0.31"}, {"color": "#d32f2f", "id": "dark matter", "label": "dark matter", "shape": "dot", "size": 25.34375, "title": "dark matter | doc_freq=208 | log10 p=-2.82 | \u0394\u4efd\u989d=+4.53e-04 | log2FC=+0.51"}, {"color": "#1565c2", "id": "black hole", "label": "black hole", "shape": "dot", "size": 35.09375, "title": "black hole | doc_freq=312 | log10 p=-2.64 | \u0394\u4efd\u989d=-4.04e-04 | log2FC=-0.23"}, {"color": "#1565c2", "id": "high energy", "label": "high energy", "shape": "dot", "size": 24.03125, "title": "high energy | doc_freq=194 | log10 p=-2.85 | \u0394\u4efd\u989d=-1.38e-04 | log2FC=-0.13"}, {"color": "#d32f2f", "id": "monte carlo", "label": "monte carlo", "shape": "dot", "size": 33.5, "title": "monte carlo | doc_freq=295 | log10 p=-2.66 | \u0394\u4efd\u989d=+1.60e-04 | log2FC=+0.11"}, {"color": "#d32f2f", "id": "spherically symmetric", "label": "spherically symmetric", "shape": "dot", "size": 14.0, "title": "spherically symmetric | doc_freq=87 | log10 p=-3.20 | \u0394\u4efd\u989d=+1.28e-04 | log2FC=+0.32"}, {"color": "#1565c2", "id": "field theory", "label": "field theory", "shape": "dot", "size": 50.0, "title": "field theory | doc_freq=471 | log10 p=-2.46 | \u0394\u4efd\u989d=-2.17e-03 | log2FC=-0.70"}, {"color": "#d32f2f", "id": "deep inelastic", "label": "deep inelastic", "shape": "dot", "size": 16.15625, "title": "deep inelastic | doc_freq=110 | log10 p=-3.09 | \u0394\u4efd\u989d=+3.11e-04 | log2FC=+0.70"}, {"color": "#d32f2f", "id": "structure functions", "label": "structure functions", "shape": "dot", "size": 13.4375, "title": "structure functions | doc_freq=81 | log10 p=-3.23 | \u0394\u4efd\u989d=+1.73e-04 | log2FC=+0.49"}, {"color": "#b8cce3", "id": "hall effect", "label": "hall effect", "shape": "dot", "size": 11.5625, "title": "hall effect | doc_freq=61 | log10 p=-3.35 | \u0394\u4efd\u989d=-1.11e-05 | log2FC=-0.04"}, {"color": "#9fbcde", "id": "symmetry breaking", "label": "symmetry breaking", "shape": "dot", "size": 30.875, "title": "symmetry breaking | doc_freq=267 | log10 p=-2.71 | \u0394\u4efd\u989d=-1.63e-05 | log2FC=-0.01"}, {"color": "#1565c2", "id": "non trivial", "label": "non trivial", "shape": "dot", "size": 20.1875, "title": "non trivial | doc_freq=153 | log10 p=-2.95 | \u0394\u4efd\u989d=-3.57e-04 | log2FC=-0.40"}, {"color": "#1565c2", "id": "string theory", "label": "string theory", "shape": "dot", "size": 24.59375, "title": "string theory | doc_freq=200 | log10 p=-2.83 | \u0394\u4efd\u989d=-1.65e-03 | log2FC=-1.08"}, {"color": "#de7b7b", "id": "critical temperature", "label": "critical temperature", "shape": "dot", "size": 11.46875, "title": "critical temperature | doc_freq=60 | log10 p=-3.36 | \u0394\u4efd\u989d=+2.59e-05 | log2FC=+0.09"}, {"color": "#d32f2f", "id": "background cmb", "label": "background cmb", "shape": "dot", "size": 8.0, "title": "background cmb | doc_freq=23 | log10 p=-3.77 | \u0394\u4efd\u989d=+8.00e-05 | log2FC=+0.90"}, {"color": "#1565c2", "id": "phase transition", "label": "phase transition", "shape": "dot", "size": 32.5625, "title": "phase transition | doc_freq=285 | log10 p=-2.68 | \u0394\u4efd\u989d=-6.17e-05 | log2FC=-0.04"}, {"color": "#7aa4d6", "id": "su lattice", "label": "su lattice", "shape": "dot", "size": 8.5625, "title": "su lattice | doc_freq=29 | log10 p=-3.67 | \u0394\u4efd\u989d=-2.40e-05 | log2FC=-0.15"}, {"color": "#d32f2f", "id": "top quark", "label": "top quark", "shape": "dot", "size": 21.03125, "title": "top quark | doc_freq=162 | log10 p=-2.93 | \u0394\u4efd\u989d=+4.93e-05 | log2FC=+0.06"}, {"color": "#1565c2", "id": "yang mills", "label": "yang mills", "shape": "dot", "size": 23.9375, "title": "yang mills | doc_freq=193 | log10 p=-2.85 | \u0394\u4efd\u989d=-2.04e-04 | log2FC=-0.19"}, {"color": "#d32f2f", "id": "cosmic microwave", "label": "cosmic microwave", "shape": "dot", "size": 12.21875, "title": "cosmic microwave | doc_freq=68 | log10 p=-3.30 | \u0394\u4efd\u989d=+6.24e-05 | log2FC=+0.19"}, {"color": "#d32f2f", "id": "de sitter", "label": "de sitter", "shape": "dot", "size": 13.53125, "title": "de sitter | doc_freq=82 | log10 p=-3.22 | \u0394\u4efd\u989d=+1.13e-04 | log2FC=+0.30"}, {"color": "#1565c2", "id": "gauge theory", "label": "gauge theory", "shape": "dot", "size": 26.1875, "title": "gauge theory | doc_freq=217 | log10 p=-2.80 | \u0394\u4efd\u989d=-5.09e-04 | log2FC=-0.40"}, {"color": "#1565c2", "id": "fixed point", "label": "fixed point", "shape": "dot", "size": 14.0, "title": "fixed point | doc_freq=87 | log10 p=-3.20 | \u0394\u4efd\u989d=-5.71e-05 | log2FC=-0.12"}, {"color": "#d32f2f", "id": "structure function", "label": "structure function", "shape": "dot", "size": 13.4375, "title": "structure function | doc_freq=81 | log10 p=-3.23 | \u0394\u4efd\u989d=+2.84e-04 | log2FC=+0.93"}, {"color": "#1565c2", "id": "supersymmetric standard", "label": "supersymmetric standard", "shape": "dot", "size": 12.21875, "title": "supersymmetric standard | doc_freq=68 | log10 p=-3.30 | \u0394\u4efd\u989d=-2.85e-04 | log2FC=-0.65"}, {"color": "#1565c2", "id": "perturbation theory", "label": "perturbation theory", "shape": "dot", "size": 33.3125, "title": "perturbation theory | doc_freq=293 | log10 p=-2.67 | \u0394\u4efd\u989d=-1.07e-04 | log2FC=-0.07"}, {"color": "#ebdbdb", "id": "low energy", "label": "low energy", "shape": "dot", "size": 33.40625, "title": "low energy | doc_freq=294 | log10 p=-2.67 | \u0394\u4efd\u989d=+4.28e-06 | log2FC=+0.00"}, {"color": "#1565c2", "id": "non abelian", "label": "non abelian", "shape": "dot", "size": 16.34375, "title": "non abelian | doc_freq=112 | log10 p=-3.09 | \u0394\u4efd\u989d=-2.21e-04 | log2FC=-0.34"}]);
+                  edges = new vis.DataSet([{"color": "#1565c2", "from": "leading order", "title": "leading order \u00d7 perturbation theory = 24 | \u0394\u4efd\u989d=-9.29e-06 | log2FC=-0.48", "to": "perturbation theory", "width": 0.7903225806451613}, {"color": "#d32f2f", "from": "leading order", "title": "leading order \u00d7 cross section = 20 | \u0394\u4efd\u989d=+7.14e-06 | log2FC=+0.64", "to": "cross section", "width": 0.5}, {"color": "#1565c2", "from": "heavy quark", "title": "heavy quark \u00d7 effective theory = 35 | \u0394\u4efd\u989d=-2.81e-05 | log2FC=-0.86", "to": "effective theory", "width": 1.5887096774193548}, {"color": "#1565c2", "from": "heavy quark", "title": "heavy quark \u00d7 form factors = 22 | \u0394\u4efd\u989d=-2.04e-05 | log2FC=-0.95", "to": "form factors", "width": 0.6451612903225806}, {"color": "#d32f2f", "from": "heavy quark", "title": "heavy quark \u00d7 sum rules = 27 | \u0394\u4efd\u989d=+1.09e-05 | log2FC=+0.76", "to": "sum rules", "width": 1.0080645161290323}, {"color": "#1968c3", "from": "calabi yau", "title": "calabi yau \u00d7 mirror symmetry = 20 | \u0394\u4efd\u989d=-1.99e-06 | log2FC=-0.14", "to": "mirror symmetry", "width": 0.5}, {"color": "#d32f2f", "from": "fixed points", "title": "fixed points \u00d7 renormalization group = 24 | \u0394\u4efd\u989d=+3.90e-06 | log2FC=+0.26", "to": "renormalization group", "width": 0.7903225806451613}, {"color": "#d43535", "from": "cross section", "title": "cross section \u00d7 high energy = 24 | \u0394\u4efd\u989d=+1.87e-06 | log2FC=+0.12", "to": "high energy", "width": 0.7903225806451613}, {"color": "#e5adad", "from": "minimal supersymmetric", "title": "minimal supersymmetric \u00d7 top quark = 28 | \u0394\u4efd\u989d=+6.62e-07 | log2FC=+0.03", "to": "top quark", "width": 1.0806451612903225}, {"color": "#1565c2", "from": "minimal supersymmetric", "title": "minimal supersymmetric \u00d7 higgs boson = 21 | \u0394\u4efd\u989d=-3.06e-06 | log2FC=-0.20", "to": "higgs boson", "width": 0.5725806451612904}, {"color": "#d32f2f", "from": "size scaling", "title": "size scaling \u00d7 monte carlo = 32 | \u0394\u4efd\u989d=+3.51e-06 | log2FC=+0.17", "to": "monte carlo", "width": 1.370967741935484}, {"color": "#1565c2", "from": "finite temperature", "title": "finite temperature \u00d7 phase transition = 33 | \u0394\u4efd\u989d=-2.90e-05 | log2FC=-0.92", "to": "phase transition", "width": 1.4435483870967742}, {"color": "#dc6f6f", "from": "renormalization group", "title": "renormalization group \u00d7 field theory = 36 | \u0394\u4efd\u989d=+1.29e-06 | log2FC=+0.05", "to": "field theory", "width": 1.6612903225806452}, {"color": "#1565c2", "from": "renormalization group", "title": "renormalization group \u00d7 fixed point = 31 | \u0394\u4efd\u989d=-7.60e-06 | log2FC=-0.32", "to": "fixed point", "width": 1.2983870967741935}, {"color": "#1565c2", "from": "renormalization group", "title": "renormalization group \u00d7 perturbation theory = 22 | \u0394\u4efd\u989d=-3.10e-06 | log2FC=-0.19", "to": "perturbation theory", "width": 0.6451612903225806}, {"color": "#d32f2f", "from": "renormalization group", "title": "renormalization group \u00d7 scalar field = 24 | \u0394\u4efd\u989d=+1.20e-05 | log2FC=+1.02", "to": "scalar field", "width": 0.7903225806451613}, {"color": "#d32f2f", "from": "renormalization group", "title": "renormalization group \u00d7 monte carlo = 23 | \u0394\u4efd\u989d=+1.11e-05 | log2FC=+0.96", "to": "monte carlo", "width": 0.717741935483871}, {"color": "#1565c2", "from": "first order", "title": "first order \u00d7 perturbation theory = 21 | \u0394\u4efd\u989d=-2.04e-06 | log2FC=-0.14", "to": "perturbation theory", "width": 0.5725806451612904}, {"color": "#1565c2", "from": "first order", "title": "first order \u00d7 phase transition = 82 | \u0394\u4efd\u989d=-3.24e-05 | log2FC=-0.49", "to": "phase transition", "width": 5.0}, {"color": "#1565c2", "from": "first order", "title": "first order \u00d7 phase transitions = 29 | \u0394\u4efd\u989d=-1.36e-05 | log2FC=-0.56", "to": "phase transitions", "width": 1.153225806451613}, {"color": "#d32f2f", "from": "first order", "title": "first order \u00d7 monte carlo = 22 | \u0394\u4efd\u989d=+2.98e-06 | log2FC=+0.21", "to": "monte carlo", "width": 0.6451612903225806}, {"color": "#e8eaed", "from": "black holes", "title": "black holes \u00d7 spherically symmetric = 22 | \u0394\u4efd\u989d=-5.95e-08 | log2FC=-0.01", "to": "spherically symmetric", "width": 0.6451612903225806}, {"color": "#1565c2", "from": "black holes", "title": "black holes \u00d7 string theory = 23 | \u0394\u4efd\u989d=-2.65e-05 | log2FC=-1.12", "to": "string theory", "width": 0.717741935483871}, {"color": "#1565c2", "from": "effective potential", "title": "effective potential \u00d7 phase transition = 20 | \u0394\u4efd\u989d=-1.92e-05 | log2FC=-0.98", "to": "phase transition", "width": 0.5}, {"color": "#d33030", "from": "order parameter", "title": "order parameter \u00d7 phase transition = 23 | \u0394\u4efd\u989d=+1.92e-06 | log2FC=+0.13", "to": "phase transition", "width": 0.717741935483871}, {"color": "#e19494", "from": "structure formation", "title": "structure formation \u00d7 dark matter = 23 | \u0394\u4efd\u989d=+9.06e-07 | log2FC=+0.06", "to": "dark matter", "width": 0.717741935483871}, {"color": "#d32f2f", "from": "finite size", "title": "finite size \u00d7 monte carlo = 42 | \u0394\u4efd\u989d=+2.01e-06 | log2FC=+0.07", "to": "monte carlo", "width": 2.096774193548387}, {"color": "#1565c2", "from": "space time", "title": "space time \u00d7 black hole = 25 | \u0394\u4efd\u989d=-9.34e-06 | log2FC=-0.46", "to": "black hole", "width": 0.8629032258064516}, {"color": "#1565c2", "from": "space time", "title": "space time \u00d7 field theory = 25 | \u0394\u4efd\u989d=-2.05e-05 | log2FC=-0.87", "to": "field theory", "width": 0.8629032258064516}, {"color": "#d32f2f", "from": "finite size scaling", "title": "finite size scaling \u00d7 monte carlo = 32 | \u0394\u4efd\u989d=+3.51e-06 | log2FC=+0.17", "to": "monte carlo", "width": 1.370967741935484}, {"color": "#d32f2f", "from": "gauge theories", "title": "gauge theories \u00d7 non abelian = 29 | \u0394\u4efd\u989d=+7.72e-06 | log2FC=+0.45", "to": "non abelian", "width": 1.153225806451613}, {"color": "#1565c2", "from": "gauge theories", "title": "gauge theories \u00d7 yang mills = 20 | \u0394\u4efd\u989d=-4.02e-06 | log2FC=-0.27", "to": "yang mills", "width": 0.5}, {"color": "#d32f2f", "from": "coupling constant", "title": "coupling constant \u00d7 perturbation theory = 20 | \u0394\u4efd\u989d=+8.16e-06 | log2FC=+0.76", "to": "perturbation theory", "width": 0.5}, {"color": "#1565c2", "from": "second order", "title": "second order \u00d7 phase transition = 36 | \u0394\u4efd\u989d=-8.86e-06 | log2FC=-0.32", "to": "phase transition", "width": 1.6612903225806452}, {"color": "#e19090", "from": "event horizon", "title": "event horizon \u00d7 black hole = 22 | \u0394\u4efd\u989d=+9.55e-07 | log2FC=+0.06", "to": "black hole", "width": 0.6451612903225806}, {"color": "#e4a8a8", "from": "higgs boson", "title": "higgs boson \u00d7 top quark = 27 | \u0394\u4efd\u989d=+7.11e-07 | log2FC=+0.04", "to": "top quark", "width": 1.0080645161290323}, {"color": "#b9cce3", "from": "fractional quantum", "title": "fractional quantum \u00d7 hall effect = 31 | \u0394\u4efd\u989d=-4.99e-07 | log2FC=-0.02", "to": "hall effect", "width": 1.2983870967741935}, {"color": "#1565c2", "from": "chern simons", "title": "chern simons \u00d7 field theory = 20 | \u0394\u4efd\u989d=-2.63e-05 | log2FC=-1.22", "to": "field theory", "width": 0.5}, {"color": "#d32f2f", "from": "parameter space", "title": "parameter space \u00d7 top quark = 20 | \u0394\u4efd\u989d=+2.07e-06 | log2FC=+0.16", "to": "top quark", "width": 0.5}, {"color": "#80a9d8", "from": "black hole", "title": "black hole \u00d7 de sitter = 21 | \u0394\u4efd\u989d=-1.03e-06 | log2FC=-0.07", "to": "de sitter", "width": 0.5725806451612904}, {"color": "#1565c2", "from": "black hole", "title": "black hole \u00d7 string theory = 29 | \u0394\u4efd\u989d=-3.79e-05 | log2FC=-1.22", "to": "string theory", "width": 1.153225806451613}, {"color": "#6b9cd4", "from": "black hole", "title": "black hole \u00d7 spherically symmetric = 25 | \u0394\u4efd\u989d=-1.22e-06 | log2FC=-0.07", "to": "spherically symmetric", "width": 0.8629032258064516}, {"color": "#d32f2f", "from": "monte carlo", "title": "monte carlo \u00d7 phase transition = 32 | \u0394\u4efd\u989d=+4.53e-06 | log2FC=+0.22", "to": "phase transition", "width": 1.370967741935484}, {"color": "#ededee", "from": "field theory", "title": "field theory \u00d7 phase transition = 21 | \u0394\u4efd\u989d=-1.07e-08 | log2FC=-0.00", "to": "phase transition", "width": 0.5725806451612904}, {"color": "#1565c2", "from": "field theory", "title": "field theory \u00d7 low energy = 29 | \u0394\u4efd\u989d=-8.52e-06 | log2FC=-0.38", "to": "low energy", "width": 1.153225806451613}, {"color": "#1565c2", "from": "field theory", "title": "field theory \u00d7 non trivial = 24 | \u0394\u4efd\u989d=-2.19e-06 | log2FC=-0.13", "to": "non trivial", "width": 0.7903225806451613}, {"color": "#d32f2f", "from": "field theory", "title": "field theory \u00d7 symmetry breaking = 21 | \u0394\u4efd\u989d=+4.05e-06 | log2FC=+0.31", "to": "symmetry breaking", "width": 0.5725806451612904}, {"color": "#d32f2f", "from": "deep inelastic", "title": "deep inelastic \u00d7 structure function = 25 | \u0394\u4efd\u989d=+7.91e-06 | log2FC=+0.56", "to": "structure function", "width": 0.8629032258064516}, {"color": "#d32f2f", "from": "deep inelastic", "title": "deep inelastic \u00d7 structure functions = 32 | \u0394\u4efd\u989d=+1.26e-05 | log2FC=+0.74", "to": "structure functions", "width": 1.370967741935484}, {"color": "#d32f2f", "from": "symmetry breaking", "title": "symmetry breaking \u00d7 phase transition = 23 | \u0394\u4efd\u989d=+4.97e-06 | log2FC=+0.35", "to": "phase transition", "width": 0.717741935483871}, {"color": "#d32f2f", "from": "symmetry breaking", "title": "symmetry breaking \u00d7 low energy = 30 | \u0394\u4efd\u989d=+6.65e-06 | log2FC=+0.37", "to": "low energy", "width": 1.2258064516129032}, {"color": "#1565c2", "from": "string theory", "title": "string theory \u00d7 low energy = 20 | \u0394\u4efd\u989d=-1.72e-05 | log2FC=-0.90", "to": "low energy", "width": 0.5}, {"color": "#ededee", "from": "critical temperature", "title": "critical temperature \u00d7 phase transition = 21 | \u0394\u4efd\u989d=-1.07e-08 | log2FC=-0.00", "to": "phase transition", "width": 0.5725806451612904}, {"color": "#d32f2f", "from": "background cmb", "title": "background cmb \u00d7 cosmic microwave = 22 | \u0394\u4efd\u989d=+9.07e-06 | log2FC=+0.78", "to": "cosmic microwave", "width": 0.6451612903225806}, {"color": "#1565c2", "from": "su lattice", "title": "su lattice \u00d7 gauge theory = 22 | \u0394\u4efd\u989d=-4.12e-06 | log2FC=-0.25", "to": "gauge theory", "width": 0.6451612903225806}, {"color": "#edeaea", "from": "top quark", "title": "top quark \u00d7 supersymmetric standard = 20 | \u0394\u4efd\u989d=+3.81e-08 | log2FC=+0.00", "to": "supersymmetric standard", "width": 0.5}, {"color": "#1565c2", "from": "yang mills", "title": "yang mills \u00d7 gauge theory = 20 | \u0394\u4efd\u989d=-8.08e-06 | log2FC=-0.49", "to": "gauge theory", "width": 0.5}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
