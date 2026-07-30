@@ -3,6 +3,7 @@ Visualize the Scientific Process by Year
 
 ## acceleration
 
+- [YEAR 1995](https://jiyanjiang.github.io/network/pair_accel_network_full_1995_e20_v1.html) (coarse)
 - [Year 1995](https://jiyanjiang.github.io/network/pair_accel_network_full_1995_e10_v1.html) (fine)
 
 ## velocity
