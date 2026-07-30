@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1000px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 1000px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "chern simons", "label": "chern simons", "shape": "dot", "size": 20.474114441416894, "title": "chern simons | doc_freq=244"}, {"color": "#97c2fc", "id": "field theories", "label": "field theories", "shape": "dot", "size": 25.22343324250681, "title": "field theories | doc_freq=327"}, {"color": "#97c2fc", "id": "supersymmetric standard", "label": "supersymmetric standard", "shape": "dot", "size": 12.577656675749319, "title": "supersymmetric standard | doc_freq=106"}, {"color": "#97c2fc", "id": "target space", "label": "target space", "shape": "dot", "size": 12.634877384196185, "title": "target space | doc_freq=107"}, {"color": "#97c2fc", "id": "space time", "label": "space time", "shape": "dot", "size": 22.019073569482288, "title": "space time | doc_freq=271"}, {"color": "#97c2fc", "id": "minimal supersymmetric", "label": "minimal supersymmetric", "shape": "dot", "size": 13.20708446866485, "title": "minimal supersymmetric | doc_freq=117"}, {"color": "#97c2fc", "id": "monte carlo", "label": "monte carlo", "shape": "dot", "size": 22.019073569482288, "title": "monte carlo | doc_freq=271"}, {"color": "#97c2fc", "id": "large scale structure", "label": "large scale structure", "shape": "dot", "size": 9.087193460490463, "title": "large scale structure | doc_freq=45"}, {"color": "#97c2fc", "id": "world sheet", "label": "world sheet", "shape": "dot", "size": 10.746594005449591, "title": "world sheet | doc_freq=74"}, {"color": "#97c2fc", "id": "large scale", "label": "large scale", "shape": "dot", "size": 13.321525885558582, "title": "large scale | doc_freq=119"}, {"color": "#97c2fc", "id": "cross sections", "label": "cross sections", "shape": "dot", "size": 14.465940054495913, "title": "cross sections | doc_freq=139"}, {"color": "#97c2fc", "id": "finite temperature", "label": "finite temperature", "shape": "dot", "size": 16.983651226158038, "title": "finite temperature | doc_freq=183"}, {"color": "#97c2fc", "id": "leading order", "label": "leading order", "shape": "dot", "size": 16.068119891008173, "title": "leading order | doc_freq=167"}, {"color": "#97c2fc", "id": "conformal field", "label": "conformal field", "shape": "dot", "size": 20.760217983651224, "title": "conformal field | doc_freq=249"}, {"color": "#97c2fc", "id": "finite size scaling", "label": "finite size scaling", "shape": "dot", "size": 10.861035422343324, "title": "finite size scaling | doc_freq=76"}, {"color": "#97c2fc", "id": "size scaling", "label": "size scaling", "shape": "dot", "size": 10.861035422343324, "title": "size scaling | doc_freq=76"}, {"color": "#97c2fc", "id": "general relativity", "label": "general relativity", "shape": "dot", "size": 14.465940054495913, "title": "general relativity | doc_freq=139"}, {"color": "#97c2fc", "id": "coupling constant", "label": "coupling constant", "shape": "dot", "size": 16.239782016348776, "title": "coupling constant | doc_freq=170"}, {"color": "#97c2fc", "id": "gauge field", "label": "gauge field", "shape": "dot", "size": 14.980926430517712, "title": "gauge field | doc_freq=148"}, {"color": "#97c2fc", "id": "high temperature", "label": "high temperature", "shape": "dot", "size": 13.893732970027248, "title": "high temperature | doc_freq=129"}, {"color": "#97c2fc", "id": "string theory", "label": "string theory", "shape": "dot", "size": 30.60217983651226, "title": "string theory | doc_freq=421"}, {"color": "#97c2fc", "id": "hall effect", "label": "hall effect", "shape": "dot", "size": 10.059945504087194, "title": "hall effect | doc_freq=62"}, {"color": "#97c2fc", "id": "electroweak phase transition", "label": "electroweak phase transition", "shape": "dot", "size": 9.258855585831062, "title": "electroweak phase transition | doc_freq=48"}, {"color": "#97c2fc", "id": "isgur wise", "label": "isgur wise", "shape": "dot", "size": 8.572207084468666, "title": "isgur wise | doc_freq=36"}, {"color": "#97c2fc", "id": "moduli space", "label": "moduli space", "shape": "dot", "size": 12.40599455040872, "title": "moduli space | doc_freq=103"}, {"color": "#97c2fc", "id": "hole solutions", "label": "hole solutions", "shape": "dot", "size": 8.514986376021799, "title": "hole solutions | doc_freq=35"}, {"color": "#97c2fc", "id": "wise function", "label": "wise function", "shape": "dot", "size": 8.0, "title": "wise function | doc_freq=26"}, {"color": "#97c2fc", "id": "dilaton gravity", "label": "dilaton gravity", "shape": "dot", "size": 11.662125340599456, "title": "dilaton gravity | doc_freq=90"}, {"color": "#97c2fc", "id": "quantum gravity", "label": "quantum gravity", "shape": "dot", "size": 23.96457765667575, "title": "quantum gravity | doc_freq=305"}, {"color": "#97c2fc", "id": "magnetic field", "label": "magnetic field", "shape": "dot", "size": 18.12806539509537, "title": "magnetic field | doc_freq=203"}, {"color": "#97c2fc", "id": "order parameter", "label": "order parameter", "shape": "dot", "size": 11.547683923705723, "title": "order parameter | doc_freq=88"}, {"color": "#97c2fc", "id": "low energy", "label": "low energy", "shape": "dot", "size": 23.16348773841962, "title": "low energy | doc_freq=291"}, {"color": "#97c2fc", "id": "calabi yau", "label": "calabi yau", "shape": "dot", "size": 10.288828337874659, "title": "calabi yau | doc_freq=66"}, {"color": "#97c2fc", "id": "quantum mechanics", "label": "quantum mechanics", "shape": "dot", "size": 16.068119891008173, "title": "quantum mechanics | doc_freq=167"}, {"color": "#97c2fc", "id": "self dual", "label": "self dual", "shape": "dot", "size": 12.634877384196185, "title": "self dual | doc_freq=107"}, {"color": "#97c2fc", "id": "field theory", "label": "field theory", "shape": "dot", "size": 50.0, "title": "field theory | doc_freq=760"}, {"color": "#97c2fc", "id": "su lattice", "label": "su lattice", "shape": "dot", "size": 8.3433242506812, "title": "su lattice | doc_freq=32"}, {"color": "#97c2fc", "id": "isgur wise function", "label": "isgur wise function", "shape": "dot", "size": 8.0, "title": "isgur wise function | doc_freq=26"}, {"color": "#97c2fc", "id": "dimensional dilaton", "label": "dimensional dilaton", "shape": "dot", "size": 9.544959128065395, "title": "dimensional dilaton | doc_freq=53"}, {"color": "#97c2fc", "id": "phase transitions", "label": "phase transitions", "shape": "dot", "size": 12.634877384196185, "title": "phase transitions | doc_freq=107"}, {"color": "#97c2fc", "id": "second order", "label": "second order", "shape": "dot", "size": 15.381471389645776, "title": "second order | doc_freq=155"}, {"color": "#97c2fc", "id": "electroweak symmetry", "label": "electroweak symmetry", "shape": "dot", "size": 10.403269754768392, "title": "electroweak symmetry | doc_freq=68"}, {"color": "#97c2fc", "id": "renormalization group", "label": "renormalization group", "shape": "dot", "size": 20.645776566757494, "title": "renormalization group | doc_freq=247"}, {"color": "#97c2fc", "id": "fixed point", "label": "fixed point", "shape": "dot", "size": 11.891008174386922, "title": "fixed point | doc_freq=94"}, {"color": "#97c2fc", "id": "quantum hall", "label": "quantum hall", "shape": "dot", "size": 11.147138964577657, "title": "quantum hall | doc_freq=81"}, {"color": "#97c2fc", "id": "event horizon", "label": "event horizon", "shape": "dot", "size": 8.114441416893733, "title": "event horizon | doc_freq=28"}, {"color": "#97c2fc", "id": "mirror symmetry", "label": "mirror symmetry", "shape": "dot", "size": 8.228882833787466, "title": "mirror symmetry | doc_freq=30"}, {"color": "#97c2fc", "id": "structure formation", "label": "structure formation", "shape": "dot", "size": 8.80108991825613, "title": "structure formation | doc_freq=40"}, {"color": "#97c2fc", "id": "lie algebra", "label": "lie algebra", "shape": "dot", "size": 13.664850136239782, "title": "lie algebra | doc_freq=125"}, {"color": "#97c2fc", "id": "neutral currents", "label": "neutral currents", "shape": "dot", "size": 8.057220708446867, "title": "neutral currents | doc_freq=27"}, {"color": "#97c2fc", "id": "dark matter", "label": "dark matter", "shape": "dot", "size": 14.809264305177113, "title": "dark matter | doc_freq=145"}, {"color": "#97c2fc", "id": "gauge theories", "label": "gauge theories", "shape": "dot", "size": 19.55858310626703, "title": "gauge theories | doc_freq=228"}, {"color": "#97c2fc", "id": "non perturbative", "label": "non perturbative", "shape": "dot", "size": 16.583106267029972, "title": "non perturbative | doc_freq=176"}, {"color": "#97c2fc", "id": "top quark", "label": "top quark", "shape": "dot", "size": 15.32425068119891, "title": "top quark | doc_freq=154"}, {"color": "#97c2fc", "id": "non trivial", "label": "non trivial", "shape": "dot", "size": 17.956403269754766, "title": "non trivial | doc_freq=200"}, {"color": "#97c2fc", "id": "semi classical", "label": "semi classical", "shape": "dot", "size": 9.773841961852861, "title": "semi classical | doc_freq=57"}, {"color": "#97c2fc", "id": "hawking radiation", "label": "hawking radiation", "shape": "dot", "size": 8.514986376021799, "title": "hawking radiation | doc_freq=35"}, {"color": "#97c2fc", "id": "first order", "label": "first order", "shape": "dot", "size": 22.076294277929158, "title": "first order | doc_freq=272"}, {"color": "#97c2fc", "id": "correlation functions", "label": "correlation functions", "shape": "dot", "size": 19.673024523160763, "title": "correlation functions | doc_freq=230"}, {"color": "#97c2fc", "id": "higgs boson", "label": "higgs boson", "shape": "dot", "size": 14.237057220708447, "title": "higgs boson | doc_freq=135"}, {"color": "#97c2fc", "id": "non linear", "label": "non linear", "shape": "dot", "size": 14.637602179836513, "title": "non linear | doc_freq=142"}, {"color": "#97c2fc", "id": "microwave background", "label": "microwave background", "shape": "dot", "size": 10.632152588555858, "title": "microwave background | doc_freq=72"}, {"color": "#97c2fc", "id": "parameter space", "label": "parameter space", "shape": "dot", "size": 13.836512261580381, "title": "parameter space | doc_freq=128"}, {"color": "#97c2fc", "id": "non abelian", "label": "non abelian", "shape": "dot", "size": 14.580381471389646, "title": "non abelian | doc_freq=141"}, {"color": "#97c2fc", "id": "path integral", "label": "path integral", "shape": "dot", "size": 17.09809264305177, "title": "path integral | doc_freq=185"}, {"color": "#97c2fc", "id": "four dimensional", "label": "four dimensional", "shape": "dot", "size": 16.525885558583106, "title": "four dimensional | doc_freq=175"}, {"color": "#97c2fc", "id": "critical point", "label": "critical point", "shape": "dot", "size": 11.147138964577657, "title": "critical point | doc_freq=81"}, {"color": "#97c2fc", "id": "heavy quark", "label": "heavy quark", "shape": "dot", "size": 18.814713896457768, "title": "heavy quark | doc_freq=215"}, {"color": "#97c2fc", "id": "symmetry breaking", "label": "symmetry breaking", "shape": "dot", "size": 21.79019073569482, "title": "symmetry breaking | doc_freq=267"}, {"color": "#97c2fc", "id": "black hole", "label": "black hole", "shape": "dot", "size": 27.340599455040874, "title": "black hole | doc_freq=364"}, {"color": "#97c2fc", "id": "supersymmetry breaking", "label": "supersymmetry breaking", "shape": "dot", "size": 10.746594005449591, "title": "supersymmetry breaking | doc_freq=74"}, {"color": "#97c2fc", "id": "high energy", "label": "high energy", "shape": "dot", "size": 18.5858310626703, "title": "high energy | doc_freq=211"}, {"color": "#97c2fc", "id": "flavor changing", "label": "flavor changing", "shape": "dot", "size": 8.572207084468666, "title": "flavor changing | doc_freq=36"}, {"color": "#97c2fc", "id": "perturbation theory", "label": "perturbation theory", "shape": "dot", "size": 23.96457765667575, "title": "perturbation theory | doc_freq=305"}, {"color": "#97c2fc", "id": "closed string", "label": "closed string", "shape": "dot", "size": 9.487738419618529, "title": "closed string | doc_freq=52"}, {"color": "#97c2fc", "id": "dimensional black", "label": "dimensional black", "shape": "dot", "size": 10.574931880108991, "title": "dimensional black | doc_freq=71"}, {"color": "#97c2fc", "id": "form factors", "label": "form factors", "shape": "dot", "size": 14.35149863760218, "title": "form factors | doc_freq=137"}, {"color": "#97c2fc", "id": "quantum group", "label": "quantum group", "shape": "dot", "size": 12.920980926430516, "title": "quantum group | doc_freq=112"}, {"color": "#97c2fc", "id": "cosmological constant", "label": "cosmological constant", "shape": "dot", "size": 14.237057220708447, "title": "cosmological constant | doc_freq=135"}, {"color": "#97c2fc", "id": "phase transition", "label": "phase transition", "shape": "dot", "size": 23.16348773841962, "title": "phase transition | doc_freq=291"}, {"color": "#97c2fc", "id": "critical temperature", "label": "critical temperature", "shape": "dot", "size": 9.716621253405995, "title": "critical temperature | doc_freq=56"}, {"color": "#97c2fc", "id": "gauge theory", "label": "gauge theory", "shape": "dot", "size": 22.762942779291553, "title": "gauge theory | doc_freq=284"}, {"color": "#97c2fc", "id": "electroweak phase", "label": "electroweak phase", "shape": "dot", "size": 9.316076294277929, "title": "electroweak phase | doc_freq=49"}, {"color": "#97c2fc", "id": "radiative corrections", "label": "radiative corrections", "shape": "dot", "size": 12.520435967302452, "title": "radiative corrections | doc_freq=105"}, {"color": "#97c2fc", "id": "spherically symmetric", "label": "spherically symmetric", "shape": "dot", "size": 10.460490463215258, "title": "spherically symmetric | doc_freq=69"}, {"color": "#97c2fc", "id": "cross section", "label": "cross section", "shape": "dot", "size": 15.610354223433243, "title": "cross section | doc_freq=159"}, {"color": "#97c2fc", "id": "effective theory", "label": "effective theory", "shape": "dot", "size": 13.550408719346049, "title": "effective theory | doc_freq=123"}, {"color": "#97c2fc", "id": "scale structure", "label": "scale structure", "shape": "dot", "size": 9.201634877384196, "title": "scale structure | doc_freq=47"}, {"color": "#97c2fc", "id": "fractional quantum", "label": "fractional quantum", "shape": "dot", "size": 8.915531335149863, "title": "fractional quantum | doc_freq=42"}, {"color": "#97c2fc", "id": "central charge", "label": "central charge", "shape": "dot", "size": 12.749318801089919, "title": "central charge | doc_freq=109"}, {"color": "#97c2fc", "id": "dimensional dilaton gravity", "label": "dimensional dilaton gravity", "shape": "dot", "size": 9.201634877384196, "title": "dimensional dilaton gravity | doc_freq=47"}, {"color": "#97c2fc", "id": "partition function", "label": "partition function", "shape": "dot", "size": 16.125340599455043, "title": "partition function | doc_freq=168"}, {"color": "#97c2fc", "id": "finite size", "label": "finite size", "shape": "dot", "size": 14.752043596730246, "title": "finite size | doc_freq=144"}, {"color": "#97c2fc", "id": "critical exponents", "label": "critical exponents", "shape": "dot", "size": 11.26158038147139, "title": "critical exponents | doc_freq=83"}, {"color": "#97c2fc", "id": "matrix elements", "label": "matrix elements", "shape": "dot", "size": 13.893732970027248, "title": "matrix elements | doc_freq=129"}, {"color": "#97c2fc", "id": "effective potential", "label": "effective potential", "shape": "dot", "size": 13.836512261580381, "title": "effective potential | doc_freq=128"}, {"color": "#97c2fc", "id": "quark mass", "label": "quark mass", "shape": "dot", "size": 15.839237057220709, "title": "quark mass | doc_freq=163"}, {"color": "#97c2fc", "id": "back reaction", "label": "back reaction", "shape": "dot", "size": 8.400544959128066, "title": "back reaction | doc_freq=33"}, {"color": "#97c2fc", "id": "de sitter", "label": "de sitter", "shape": "dot", "size": 10.288828337874659, "title": "de sitter | doc_freq=66"}, {"color": "#97c2fc", "id": "ground state", "label": "ground state", "shape": "dot", "size": 17.956403269754766, "title": "ground state | doc_freq=200"}, {"color": "#97c2fc", "id": "wave function", "label": "wave function", "shape": "dot", "size": 13.149863760217983, "title": "wave function | doc_freq=116"}, {"color": "#97c2fc", "id": "yang mills", "label": "yang mills", "shape": "dot", "size": 19.043596730245234, "title": "yang mills | doc_freq=219"}, {"color": "#97c2fc", "id": "black holes", "label": "black holes", "shape": "dot", "size": 20.874659400544957, "title": "black holes | doc_freq=251"}, {"color": "#97c2fc", "id": "effective action", "label": "effective action", "shape": "dot", "size": 16.64032697547684, "title": "effective action | doc_freq=177"}]);
+                  edges = new vis.DataSet([{"from": "chern simons", "title": "chern simons \u00d7 field theory = 45", "to": "field theory", "width": 1.75}, {"from": "chern simons", "title": "chern simons \u00d7 gauge theory = 29", "to": "gauge theory", "width": 0.95}, {"from": "chern simons", "title": "chern simons \u00d7 gauge field = 26", "to": "gauge field", "width": 0.8}, {"from": "field theories", "title": "field theories \u00d7 string theory = 24", "to": "string theory", "width": 0.7}, {"from": "field theories", "title": "field theories \u00d7 correlation functions = 20", "to": "correlation functions", "width": 0.5}, {"from": "supersymmetric standard", "title": "supersymmetric standard \u00d7 supersymmetry breaking = 25", "to": "supersymmetry breaking", "width": 0.75}, {"from": "supersymmetric standard", "title": "supersymmetric standard \u00d7 parameter space = 20", "to": "parameter space", "width": 0.5}, {"from": "target space", "title": "target space \u00d7 string theory = 26", "to": "string theory", "width": 0.8}, {"from": "space time", "title": "space time \u00d7 field theory = 44", "to": "field theory", "width": 1.7}, {"from": "space time", "title": "space time \u00d7 string theory = 33", "to": "string theory", "width": 1.15}, {"from": "space time", "title": "space time \u00d7 black hole = 33", "to": "black hole", "width": 1.15}, {"from": "minimal supersymmetric", "title": "minimal supersymmetric \u00d7 top quark = 26", "to": "top quark", "width": 0.8}, {"from": "minimal supersymmetric", "title": "minimal supersymmetric \u00d7 higgs boson = 23", "to": "higgs boson", "width": 0.65}, {"from": "minimal supersymmetric", "title": "minimal supersymmetric \u00d7 supersymmetry breaking = 22", "to": "supersymmetry breaking", "width": 0.6}, {"from": "minimal supersymmetric", "title": "minimal supersymmetric \u00d7 quark mass = 21", "to": "quark mass", "width": 0.55}, {"from": "minimal supersymmetric", "title": "minimal supersymmetric \u00d7 radiative corrections = 21", "to": "radiative corrections", "width": 0.55}, {"from": "minimal supersymmetric", "title": "minimal supersymmetric \u00d7 parameter space = 21", "to": "parameter space", "width": 0.55}, {"from": "monte carlo", "title": "monte carlo \u00d7 finite size = 38", "to": "finite size", "width": 1.4}, {"from": "monte carlo", "title": "monte carlo \u00d7 finite size scaling = 27", "to": "finite size scaling", "width": 0.85}, {"from": "monte carlo", "title": "monte carlo \u00d7 size scaling = 27", "to": "size scaling", "width": 0.85}, {"from": "monte carlo", "title": "monte carlo \u00d7 phase transition = 26", "to": "phase transition", "width": 0.8}, {"from": "monte carlo", "title": "monte carlo \u00d7 field theory = 21", "to": "field theory", "width": 0.55}, {"from": "large scale structure", "title": "large scale structure \u00d7 dark matter = 20", "to": "dark matter", "width": 0.5}, {"from": "world sheet", "title": "world sheet \u00d7 string theory = 30", "to": "string theory", "width": 1.0}, {"from": "large scale", "title": "large scale \u00d7 dark matter = 30", "to": "dark matter", "width": 1.0}, {"from": "large scale", "title": "large scale \u00d7 structure formation = 24", "to": "structure formation", "width": 0.7}, {"from": "large scale", "title": "large scale \u00d7 microwave background = 22", "to": "microwave background", "width": 0.6}, {"from": "cross sections", "title": "cross sections \u00d7 high energy = 28", "to": "high energy", "width": 0.9}, {"from": "finite temperature", "title": "finite temperature \u00d7 phase transition = 60", "to": "phase transition", "width": 2.5}, {"from": "finite temperature", "title": "finite temperature \u00d7 effective potential = 35", "to": "effective potential", "width": 1.25}, {"from": "finite temperature", "title": "finite temperature \u00d7 first order = 33", "to": "first order", "width": 1.15}, {"from": "finite temperature", "title": "finite temperature \u00d7 field theory = 29", "to": "field theory", "width": 0.95}, {"from": "finite temperature", "title": "finite temperature \u00d7 electroweak phase = 20", "to": "electroweak phase", "width": 0.5}, {"from": "finite temperature", "title": "finite temperature \u00d7 electroweak phase transition = 20", "to": "electroweak phase transition", "width": 0.5}, {"from": "leading order", "title": "leading order \u00d7 perturbation theory = 32", "to": "perturbation theory", "width": 1.1}, {"from": "leading order", "title": "leading order \u00d7 heavy quark = 24", "to": "heavy quark", "width": 0.7}, {"from": "conformal field", "title": "conformal field \u00d7 string theory = 30", "to": "string theory", "width": 1.0}, {"from": "conformal field", "title": "conformal field \u00d7 correlation functions = 25", "to": "correlation functions", "width": 0.75}, {"from": "conformal field", "title": "conformal field \u00d7 central charge = 20", "to": "central charge", "width": 0.5}, {"from": "finite size scaling", "title": "finite size scaling \u00d7 critical exponents = 20", "to": "critical exponents", "width": 0.5}, {"from": "size scaling", "title": "size scaling \u00d7 critical exponents = 20", "to": "critical exponents", "width": 0.5}, {"from": "general relativity", "title": "general relativity \u00d7 quantum gravity = 26", "to": "quantum gravity", "width": 0.8}, {"from": "general relativity", "title": "general relativity \u00d7 black hole = 23", "to": "black hole", "width": 0.65}, {"from": "coupling constant", "title": "coupling constant \u00d7 renormalization group = 22", "to": "renormalization group", "width": 0.6}, {"from": "high temperature", "title": "high temperature \u00d7 phase transition = 22", "to": "phase transition", "width": 0.6}, {"from": "string theory", "title": "string theory \u00d7 black hole = 65", "to": "black hole", "width": 2.75}, {"from": "string theory", "title": "string theory \u00d7 black holes = 48", "to": "black holes", "width": 1.9}, {"from": "string theory", "title": "string theory \u00d7 quantum gravity = 37", "to": "quantum gravity", "width": 1.35}, {"from": "string theory", "title": "string theory \u00d7 low energy = 36", "to": "low energy", "width": 1.3}, {"from": "string theory", "title": "string theory \u00d7 four dimensional = 26", "to": "four dimensional", "width": 0.8}, {"from": "string theory", "title": "string theory \u00d7 partition function = 25", "to": "partition function", "width": 0.75}, {"from": "string theory", "title": "string theory \u00d7 cosmological constant = 23", "to": "cosmological constant", "width": 0.65}, {"from": "string theory", "title": "string theory \u00d7 dimensional black = 20", "to": "dimensional black", "width": 0.5}, {"from": "string theory", "title": "string theory \u00d7 moduli space = 20", "to": "moduli space", "width": 0.5}, {"from": "hall effect", "title": "hall effect \u00d7 fractional quantum = 30", "to": "fractional quantum", "width": 1.0}, {"from": "electroweak phase transition", "title": "electroweak phase transition \u00d7 first order = 28", "to": "first order", "width": 0.9}, {"from": "isgur wise", "title": "isgur wise \u00d7 heavy quark = 28", "to": "heavy quark", "width": 0.9}, {"from": "moduli space", "title": "moduli space \u00d7 calabi yau = 21", "to": "calabi yau", "width": 0.55}, {"from": "hole solutions", "title": "hole solutions \u00d7 black holes = 24", "to": "black holes", "width": 0.7}, {"from": "wise function", "title": "wise function \u00d7 heavy quark = 20", "to": "heavy quark", "width": 0.5}, {"from": "dilaton gravity", "title": "dilaton gravity \u00d7 black hole = 40", "to": "black hole", "width": 1.5}, {"from": "dilaton gravity", "title": "dilaton gravity \u00d7 black holes = 35", "to": "black holes", "width": 1.25}, {"from": "quantum gravity", "title": "quantum gravity \u00d7 field theory = 35", "to": "field theory", "width": 1.25}, {"from": "quantum gravity", "title": "quantum gravity \u00d7 non perturbative = 24", "to": "non perturbative", "width": 0.7}, {"from": "quantum gravity", "title": "quantum gravity \u00d7 black hole = 24", "to": "black hole", "width": 0.7}, {"from": "quantum gravity", "title": "quantum gravity \u00d7 path integral = 23", "to": "path integral", "width": 0.65}, {"from": "quantum gravity", "title": "quantum gravity \u00d7 four dimensional = 21", "to": "four dimensional", "width": 0.55}, {"from": "quantum gravity", "title": "quantum gravity \u00d7 cosmological constant = 21", "to": "cosmological constant", "width": 0.55}, {"from": "magnetic field", "title": "magnetic field \u00d7 quantum hall = 21", "to": "quantum hall", "width": 0.55}, {"from": "order parameter", "title": "order parameter \u00d7 phase transition = 20", "to": "phase transition", "width": 0.5}, {"from": "low energy", "title": "low energy \u00d7 field theory = 36", "to": "field theory", "width": 1.3}, {"from": "low energy", "title": "low energy \u00d7 black hole = 22", "to": "black hole", "width": 0.6}, {"from": "low energy", "title": "low energy \u00d7 perturbation theory = 22", "to": "perturbation theory", "width": 0.6}, {"from": "low energy", "title": "low energy \u00d7 symmetry breaking = 22", "to": "symmetry breaking", "width": 0.6}, {"from": "low energy", "title": "low energy \u00d7 black holes = 21", "to": "black holes", "width": 0.55}, {"from": "calabi yau", "title": "calabi yau \u00d7 mirror symmetry = 21", "to": "mirror symmetry", "width": 0.55}, {"from": "quantum mechanics", "title": "quantum mechanics \u00d7 field theory = 29", "to": "field theory", "width": 0.95}, {"from": "self dual", "title": "self dual \u00d7 yang mills = 28", "to": "yang mills", "width": 0.9}, {"from": "field theory", "title": "field theory \u00d7 correlation functions = 39", "to": "correlation functions", "width": 1.45}, {"from": "field theory", "title": "field theory \u00d7 renormalization group = 33", "to": "renormalization group", "width": 1.15}, {"from": "field theory", "title": "field theory \u00d7 black hole = 32", "to": "black hole", "width": 1.1}, {"from": "field theory", "title": "field theory \u00d7 path integral = 32", "to": "path integral", "width": 1.1}, {"from": "field theory", "title": "field theory \u00d7 non perturbative = 29", "to": "non perturbative", "width": 0.95}, {"from": "field theory", "title": "field theory \u00d7 ground state = 27", "to": "ground state", "width": 0.85}, {"from": "field theory", "title": "field theory \u00d7 effective action = 27", "to": "effective action", "width": 0.85}, {"from": "field theory", "title": "field theory \u00d7 closed string = 26", "to": "closed string", "width": 0.8}, {"from": "field theory", "title": "field theory \u00d7 non trivial = 25", "to": "non trivial", "width": 0.75}, {"from": "field theory", "title": "field theory \u00d7 yang mills = 24", "to": "yang mills", "width": 0.7}, {"from": "field theory", "title": "field theory \u00d7 first order = 24", "to": "first order", "width": 0.7}, {"from": "field theory", "title": "field theory \u00d7 partition function = 24", "to": "partition function", "width": 0.7}, {"from": "field theory", "title": "field theory \u00d7 quantum group = 22", "to": "quantum group", "width": 0.6}, {"from": "field theory", "title": "field theory \u00d7 black holes = 22", "to": "black holes", "width": 0.6}, {"from": "field theory", "title": "field theory \u00d7 finite size = 22", "to": "finite size", "width": 0.6}, {"from": "field theory", "title": "field theory \u00d7 central charge = 21", "to": "central charge", "width": 0.55}, {"from": "field theory", "title": "field theory \u00d7 non linear = 21", "to": "non linear", "width": 0.55}, {"from": "field theory", "title": "field theory \u00d7 four dimensional = 21", "to": "four dimensional", "width": 0.55}, {"from": "field theory", "title": "field theory \u00d7 lie algebra = 20", "to": "lie algebra", "width": 0.5}, {"from": "field theory", "title": "field theory \u00d7 phase transition = 20", "to": "phase transition", "width": 0.5}, {"from": "su lattice", "title": "su lattice \u00d7 gauge theory = 25", "to": "gauge theory", "width": 0.75}, {"from": "isgur wise function", "title": "isgur wise function \u00d7 heavy quark = 20", "to": "heavy quark", "width": 0.5}, {"from": "dimensional dilaton", "title": "dimensional dilaton \u00d7 black hole = 30", "to": "black hole", "width": 1.0}, {"from": "phase transitions", "title": "phase transitions \u00d7 first order = 41", "to": "first order", "width": 1.55}, {"from": "second order", "title": "second order \u00d7 phase transition = 43", "to": "phase transition", "width": 1.65}, {"from": "electroweak symmetry", "title": "electroweak symmetry \u00d7 top quark = 20", "to": "top quark", "width": 0.5}, {"from": "renormalization group", "title": "renormalization group \u00d7 fixed point = 37", "to": "fixed point", "width": 1.35}, {"from": "renormalization group", "title": "renormalization group \u00d7 perturbation theory = 24", "to": "perturbation theory", "width": 0.7}, {"from": "event horizon", "title": "event horizon \u00d7 black hole = 20", "to": "black hole", "width": 0.5}, {"from": "structure formation", "title": "structure formation \u00d7 dark matter = 21", "to": "dark matter", "width": 0.55}, {"from": "neutral currents", "title": "neutral currents \u00d7 flavor changing = 20", "to": "flavor changing", "width": 0.5}, {"from": "dark matter", "title": "dark matter \u00d7 scale structure = 20", "to": "scale structure", "width": 0.5}, {"from": "gauge theories", "title": "gauge theories \u00d7 yang mills = 23", "to": "yang mills", "width": 0.65}, {"from": "gauge theories", "title": "gauge theories \u00d7 non abelian = 20", "to": "non abelian", "width": 0.5}, {"from": "top quark", "title": "top quark \u00d7 higgs boson = 25", "to": "higgs boson", "width": 0.75}, {"from": "top quark", "title": "top quark \u00d7 radiative corrections = 24", "to": "radiative corrections", "width": 0.7}, {"from": "semi classical", "title": "semi classical \u00d7 black hole = 22", "to": "black hole", "width": 0.6}, {"from": "hawking radiation", "title": "hawking radiation \u00d7 black hole = 31", "to": "black hole", "width": 1.05}, {"from": "first order", "title": "first order \u00d7 phase transition = 110", "to": "phase transition", "width": 5.0}, {"from": "first order", "title": "first order \u00d7 electroweak phase = 29", "to": "electroweak phase", "width": 0.95}, {"from": "first order", "title": "first order \u00d7 effective potential = 29", "to": "effective potential", "width": 0.95}, {"from": "first order", "title": "first order \u00d7 perturbation theory = 22", "to": "perturbation theory", "width": 0.6}, {"from": "non abelian", "title": "non abelian \u00d7 yang mills = 27", "to": "yang mills", "width": 0.85}, {"from": "four dimensional", "title": "four dimensional \u00d7 black hole = 25", "to": "black hole", "width": 0.75}, {"from": "four dimensional", "title": "four dimensional \u00d7 black holes = 23", "to": "black holes", "width": 0.65}, {"from": "critical point", "title": "critical point \u00d7 phase transition = 20", "to": "phase transition", "width": 0.5}, {"from": "heavy quark", "title": "heavy quark \u00d7 effective theory = 61", "to": "effective theory", "width": 2.55}, {"from": "heavy quark", "title": "heavy quark \u00d7 form factors = 41", "to": "form factors", "width": 1.55}, {"from": "heavy quark", "title": "heavy quark \u00d7 perturbation theory = 29", "to": "perturbation theory", "width": 0.95}, {"from": "heavy quark", "title": "heavy quark \u00d7 matrix elements = 20", "to": "matrix elements", "width": 0.5}, {"from": "symmetry breaking", "title": "symmetry breaking \u00d7 perturbation theory = 22", "to": "perturbation theory", "width": 0.6}, {"from": "black hole", "title": "black hole \u00d7 dimensional dilaton gravity = 27", "to": "dimensional dilaton gravity", "width": 0.85}, {"from": "black hole", "title": "black hole \u00d7 spherically symmetric = 25", "to": "spherically symmetric", "width": 0.75}, {"from": "black hole", "title": "black hole \u00d7 cosmological constant = 24", "to": "cosmological constant", "width": 0.7}, {"from": "black hole", "title": "black hole \u00d7 back reaction = 23", "to": "back reaction", "width": 0.65}, {"from": "black hole", "title": "black hole \u00d7 de sitter = 21", "to": "de sitter", "width": 0.55}, {"from": "high energy", "title": "high energy \u00d7 cross section = 21", "to": "cross section", "width": 0.55}, {"from": "phase transition", "title": "phase transition \u00d7 effective potential = 38", "to": "effective potential", "width": 1.4}, {"from": "phase transition", "title": "phase transition \u00d7 critical temperature = 20", "to": "critical temperature", "width": 0.5}, {"from": "gauge theory", "title": "gauge theory \u00d7 yang mills = 27", "to": "yang mills", "width": 0.85}, {"from": "spherically symmetric", "title": "spherically symmetric \u00d7 black holes = 21", "to": "black holes", "width": 0.55}, {"from": "finite size", "title": "finite size \u00d7 critical exponents = 24", "to": "critical exponents", "width": 0.7}, {"from": "ground state", "title": "ground state \u00d7 wave function = 22", "to": "wave function", "width": 0.6}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
