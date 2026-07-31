@@ -3,6 +3,7 @@ Visualize the Scientific Process by Year (based on arXiv.org)
 
 ## acceleration
 
+- [YEAR 2001](https://jiyanjiang.github.io/network/pair_accel_network_full_2001_e20_v1.html)
 - [YEAR 2000](https://jiyanjiang.github.io/network/pair_accel_network_full_2000_e20_v1.html)
 - [YEAR 1999](https://jiyanjiang.github.io/network/pair_accel_network_full_1999_e20_v1.html)
 - [YEAR 1998](https://jiyanjiang.github.io/network/pair_accel_network_full_1998_e20_v0.html)
