@@ -12,6 +12,8 @@ Visualize the Scientific Process by Year (based on arXiv.org)
 
 ## velocity
 
+- [YEAR 1998](https://jiyanjiang.github.io/network/pair_growth_network_full_1998_e20_v0.html)
+- [YEAR 1997](https://jiyanjiang.github.io/network/pair_growth_network_full_1997_e20_v0.html)
 - [YEAR 1996](https://jiyanjiang.github.io/network/pair_growth_network_full_1996_e20_v0.html) (coarse)
 - [YEAR 1996](https://jiyanjiang.github.io/network/pair_growth_network_full_1996_e10_v0.html) (fine)
 - [YEAR 1995](https://jiyanjiang.github.io/network/pair_growth_network_full_1995_e20_v1.html) (coarse)
