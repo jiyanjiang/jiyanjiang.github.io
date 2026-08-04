@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2020年arXiv预印本中的科学脉动: 疫情元年+量子升温</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+:root {
+  --bg: #faf6ef;
+  --text: #2b2b2b;
+  --accent: #b0563a;
+  --muted: #a89f92;
+  --border: #e3dccd;
+  --quote-bg: rgba(176, 86, 58, 0.06);
+  --code-bg: #f0ece4;
+  --font-body: "Noto Serif SC", "Songti SC", "SimSun", serif;
+  --font-heading: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "SF Mono", Menlo, Consolas, monospace;
+  --base-size: 17px;
+  --line-height: 1.9;
+  --paragraph-gap: 1.2em;
+  --card-width: 375px;
+  --padding: 28px;
+  --radius: 24px;
+}
+
+/* paper theme — 素笺：米白底、宋体、低饱和点缀（默认）。
+   Colors/fonts/type come from :root vars injected by app/theme.py. */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #d9d4c9; /* 浏览器底灰，卡片白色边缘可见 */
+}
+
+.card {
+  width: var(--card-width, 375px);
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--bg, #faf6ef);
+  color: var(--text, #2b2b2b);
+  padding: var(--padding, 28px);
+  border-radius: var(--radius, 24px);
+  font-family: var(--font-body, serif);
+  line-height: var(--line-height, 1.9);
+  font-size: var(--base-size, 17px);
+}
+
+.article > :first-child { margin-top: 0; }
+.article > :last-child { margin-bottom: 0; }
+
+.article h1, .article h2, .article h3,
+.article h4, .article h5, .article h6 {
+  font-family: var(--font-heading, sans-serif);
+  color: var(--text, #2b2b2b);
+  line-height: 1.35;
+  margin: 1.6em 0 0.7em;
+}
+.article h1 { font-size: 1.7em; border-bottom: 2px solid var(--accent, #b0563a); padding-bottom: 0.3em; }
+.article h2 { font-size: 1.4em; }
+.article h3 { font-size: 1.2em; }
+
+.article p { margin: var(--paragraph-gap, 1.2em) 0; }
+.article em { color: var(--accent, #b0563a); font-style: normal; font-weight: 600; }
+
+.article blockquote {
+  margin: 1.4em 0;
+  padding: 0.3em 1.2em;
+  border-left: 4px solid var(--accent, #b0563a);
+  background: var(--quote-bg, rgba(176, 86, 58, 0.06));
+  color: var(--muted, #4a4340);
+  border-radius: 0 8px 8px 0;
+}
+
+.article code {
+  background: var(--code-bg, #f0ece4);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.9em;
+}
+
+.article pre {
+  background: var(--code-bg, #f5f1e9);
+  padding: 1em 1.2em;
+  border-radius: 8px;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+.article pre code { background: none; padding: 0; font-size: 0.9em; }
+
+.article table {
+  border-collapse: collapse;
+  margin: 1.4em auto;
+  width: 100%;
+}
+.article th, .article td {
+  border: 1px solid var(--border, #d8d2c6);
+  padding: 0.5em 0.9em;
+  text-align: left;
+}
+.article th { background: var(--code-bg, #f0ece2); }
+
+.article img {
+  max-width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.article ul, .article ol { padding-left: 1.5em; margin: 1em 0; }
+
+.article hr {
+  border: 0;
+  border-top: 1px solid var(--border, #ddd6c8);
+  margin: 2em 0;
+}
+
+/* 短模式：正文尾部渐隐（§5.2/8.2），颜色取自主题 bg */
+.card.mode-short .article {
+  position: relative;
+  overflow: hidden;
+  max-height: 920px;
+}
+.card.mode-short .article::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 38%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--bg, #faf6ef) 100%
+  );
+  pointer-events: none;
+}
+
+/* 二维码区（右下，白底固定尺寸） */
+.card .qr {
+  margin: 1.6em auto 0;
+  padding: 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+  display: block;
+  width: fit-content;
+  text-align: center;
+}
+.card .qr .qr-img { width: 160px; height: 160px; display: block; }
+.card .qr .qr-caption {
+  margin-top: 8px;
+  font-size: 0.8em;
+  color: var(--muted, #6b6359);
+  letter-spacing: 0.05em;
+}
+
+.footer {
+  margin-top: 2.4em;
+  padding-top: 1.2em;
+  border-top: 1px solid var(--border, #e3dccd);
+  text-align: center;
+}
+.footer-date {
+  font-size: 0.8em;
+  color: var(--muted, #a89f92);
+  letter-spacing: 0.1em;
+}
+</style>
+<style>
+/* 响应式：手机默认 375px 卡片；桌面浏览器自动加宽放大（阅读友好） */
+@media (min-width: 768px) {
+  body { padding: 32px 0; }
+  .card {
+    width: 720px;
+    max-width: 100%;
+    padding: 56px 64px;
+    border-radius: 12px;
+    font-size: 19px;
+    line-height: 1.85;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+  .card.mode-short .article { max-height: 1200px; }
+}
+</style>
+</head>
+<body>
+<div class="card mode-long">
+  <div class="article"><h2>2020年arXiv预印本中的科学脉动: 疫情元年+量子升温</h2>
+<p>对于全球科学界来说，2020年注定是记忆里一块无法磨灭的烙印。这一年，预印本库arXiv悄然迈入自己的第29个年头，却迎面撞上了新冠疫情的滔天巨浪。许多实验室的大门被关上，学术会议的航班被取消，但思想的流动并未停滞——恰恰相反，大量研究者把工作迅速投放到arXiv上，使得这一年的预印本数量出现了显著跃升。更重要的是，整张学术话语的“词频热力图”也随之发生了一场结构性的重塑：有些术语像被闪电击中一样陡然蹿升，有些蓄力已久的领域终于开始加速奔跑，而另一些早已深入骨髓的词语则继续在背景里稳定地铺展。与2019年的“热词学会呼吸”、深度学习从爆发转入平台相比，2020年奏响的是一首危机驱动与前沿跃进交织的复调。需要说明的是，我们透过arXiv这扇窗看到的，只是学术生态的一部分而非全貌，但它恰好捕捉到了研究者们最即时、最未经雕饰的反应——尤其在一个充满不确定性的年份，这种反应本身就是科学脉动的真实投影。</p>
+<p>当一场全球大流行突然闯入，科学家们的集体用语立刻做出了最诚实的反映。在2020年所有热度上升最快的短语中，“covid pandemic”（新冠疫情）的蹿升速度几乎是压倒性的。上一年这个词还几乎不存在于预印本摘要中，到了2020年，它已经跻身最醒目的位置之一，与它同步涌起的还有“social distancing”（社交距离）、“sars cov”（新冠病毒）、“coronavirus disease covid”等一连串新词汇。更耐人寻味的是，这些词不是孤立地出现，而是经常结伴涌现在同一篇论文的摘要里。例如，利用手机位置数据评估社交距离措施效果的预印本（2004.11430），同时容纳了“covid pandemic”和“social distancing”；分析美国各州死亡率预测的工作（2007.11103）则将“covid pandemic”与“united states”扣在了一起；还有研究疫情期间社交媒体上的话题与情绪变迁的文章（2007.15209，2009.01267），也在同一段落里点亮了这些热词。它们编织出的，是一张覆盖流行病建模、非药物干预、公众健康、经济冲击等多方向的应急科研网络。</p>
+<p>这波疫情语词的喷涌，很容易让人想起2018年盖亚卫星数据发布引发的短暂脉冲。但这一次的规模要大得多，领域也杂得多。做复杂网络的物理学家去研究传播动力学，做计算影像的人用深度学习快速判读肺部CT（2003.09860，2009.06412），做统计物理的人去估算有效再生数的时变性（2004.05730），甚至粒子物理领域的作者也加入进来，探讨疫情对科研投稿模式的影响（2010.02594）。这种大规模的临时转向，说明当现实世界的危机足够剧烈时，科学界会迅速把语义资源重新配置，形成一种“快闪式”的研究集群。可以想见，随着时间推移，这些词汇的大部分会像所有事件驱动的脉冲一样逐渐消退，但它们对跨学科协作习惯的塑造，以及对快速预印本文化的一次空前强化，恐怕会在很长一段时间里改变物理学界的隐性语法。</p>
+<p>正当疫情词汇占据着话语舞台的追光灯时，另一群不那么戏剧性但后劲十足的词语，也在2020年集体迈上了新台阶。其中最清晰的信号来自量子世界。“quantum computer(s)”（量子计算机）和“quantum states”（量子态）成为这一年热度增长最显著的几个术语之一。如果把时间轴拉长，你会发现它们上升的斜率在这一年变得更加陡峭。更重要的是，它们不再是孤零零地待在理论讨论里，而是开始和许多更“接地气”的概念频繁共同出现。比如，“ground state(s)”（基态）与“quantum computer(s)”就成双成对地出现在多篇预印本的摘要中（2005.10189，2008.02946），讨论的无一例外是用量子计算机去求解多体系统的基态性质——这正是凝聚态物理和量子化学最核心的问题之一。此外，“quantum state”与“quantum computer(s)”各自还在速度榜上单独上扬，反映出从量子算法、误差缓解到量子电路分配（2005.01052，2009.00140）等一整套研究谱系的集体发力。</p>
+<p>与2019年的情形稍作对比，这种“量子升温”的感觉会更加真切。2019年，深度学习家族增速放缓之际，接棒热度榜首的是深度强化学习，那是一种仍然属于人工智能范畴的话语接力。2020年，最强劲的增速则让渡给了疫情词汇和量子术语。这其中，疫情显然是不可复制的黑天鹅，而量子计算却更像一种厚积薄发：经过数年的基础理论积累和实验验证，这个领域正从“证明原理可行”悄然走向“让量子机器哪怕只是轻微地有用”。一篇关于误差缓解的预印本（2005.10189）清晰地体现了这种转向——它不是在问“能否在量子计算机上模拟一个微小系统”，而是“在噪声严重的真实硬件上，如何拿到可靠的结果”。这种充满工程感的提问方式，标志着量子计算开始长出自己的肌肉。</p>
+<p>如果说疫情和量子计算是2020年语词土地上的两座新隆起，那深度学习就是这片土地本身——面积最大、最坚实，但也最不引人惊讶。统计显示，“deep learning”（深度学习）、“neural network(s)”（神经网络）和“machine learning”（机器学习）依然是这一年出现次数最多的三个短语，它们的绝对热度仍然傲视群雄。然而，它们的热度增长速度与前几年相比，已经明显放缓，甚至在那种衡量“第二年的增长比第一年更猛还是更平”的指标上，开始进入轻微的负值区。这绝不意味着深度学习被冷落；恰恰相反，这意味着它已经像“magnetic field”（磁场）或“phase transition”（相变）一样，融入到了科研写作的底层习惯中——谁会用标题宣布“本文使用了磁场”呢？深度学习的工具化，在2020年终于彻底完成。</p>
+<p>这次完成并非停滞，而是一种形态的转变。就在深度学习核心词增速趋缓的同时，其内部的分支术语却在剧烈涌动。“pre trained”（预训练）、“self supervised”（自监督）、“fine tuning”（微调）这几个词的热度在一路攀升，而且经常与“representation learning”（表征学习）、“pre training”（预训练）等形成固定搭配（2005.13249，2007.13465）。这背后是机器学习领域正在经历的一次静悄悄的革命：从“为每个任务从零训练一个专门网络”，转向“拿一个在海量数据上预训练好的巨型模型，只需微调就能适应新任务”。这类方法最早由自然语言处理领域引爆，到了2020年，已经迅速蔓延到医学图像、蛋白质序列甚至物理建模（2012.03084，2009.08319）。深度学习的语义重心，正在从“设计网络结构”转向“用好预训练模型”。与此同时，深度强化学习的热度继续上升，但步伐比2019年稍显温和，大量工作聚焦于让智能体在真实世界而非游戏环境中完成复杂决策，比如自动驾驶、交通控制以及疫情干预策略优化（2010.10567，2009.13602）。这些演变的共同指向是：人工智能不再是一个需要不断自我标榜的旗号，而是一套日益精密、日益内化到具体问题中的工具箱。</p>
+<p>在这幕科技大戏的背景板上，一个细微却极为坚固的词语正在像藤蔓一样攀爬，它就是“https github com”。这个乍看像网址的字符串，在2020年又一次成为热度上升最快的短语之一，而且它与“source code”（源代码）、“publicly available”（公开可用）的共现频率也在继续增长。简单来说，这代表了学术论文里附上代码仓库链接的行为，已经从一种锦上添花的选项，变成了一种被广泛接受的写作规范。一篇关于自监督视频表征学习的预印本（2008.13426）在摘要末尾自然地带出代码链接，一篇用深度学习做眼底病变检测的论文（2007.04734）也是如此。与2019年相比，这种做法的普及程度又上了一个台阶。它不直接产生新的物理发现，却悄然重塑着研究的可复现性和透明性。尤其在实验室因疫情而大面积关闭的2020年，开放代码和开放数据使得计算类、理论类研究能够被更顺畅地接力与检验，其价值被空前放大。可以说，“https github com”作为一个特殊的语词标记，已经成了当代物理学开放科学文化的肌肉记忆。</p>
+<p>当人工智能和疫情相关词汇在聚光灯下旋转时，许多传统物理学领域的术语依然在自己的轨道上安静而有力地运行着，它们构成了整张语词地图的深沉底色。一个值得关注的上升信号来自“large synoptic survey telescope lsst”（大型综合巡天望远镜LSST）。这个词组的热度在这一年明显增长，预示着这台还未正式上线的望远镜已经开始在预印本中预热。相关论文有的利用机器学习在模拟数据中寻找强引力透镜（2004.02715），有的讨论下一代X射线巡天与LSST的协同观测（2008.01870）。这类“设备尚未就绪，方法文章先行”的现象，与2018年盖亚数据释放前的准备期如出一辙，意味着未来几年一旦LSST开始产出真实数据，很可能会出现一波规模可观的天体物理语词爆发。同时，“accretion disk”（吸积盘）与“light curve(s)”（光变曲线）的稳定共现（2004.09149，2002.08564），以及“gaia dr”与“proper motions”（自行）的固定搭配（2009.08550，2010.05934），都表明致密天体物理和银河系考古这类传统强项并没有让出舞台，只是它们的语词波动更接近于长周期的稳定呼吸，而不是短期脉冲。</p>
+<p>在凝聚态物理的领地上，“magnetic field(s)”（磁场）依旧是绝对热度最高的常用词之一。尽管它自身的增速有所放缓，但与“landau level(s)”（朗道能级）、“topological insulator(s)”（拓扑绝缘体）的搭配（2003.02520，2008.11412）仍然相当稳固。尤其醒目的是，“second order”与“topological insulator(s)”的共现热度在上升（2001.00384，2007.04332），这指向了高阶拓扑绝缘体这个正处于萌芽期的新课题。此外，“phase transition(s)”（相变）、“phase diagram(s)”（相图）与“order parameter”（序参量）的经典组合（2002.00034，2002.02142）也在大量涌现，说明强关联电子系统、量子相变等老牌的硬核物理依然在产出一流的预印本。这些词语不会冲上任何“增速榜”的头条，但正是它们年复一年的稳定存在，撑起了物理学预印本的半壁江山。</p>
+<p>粒子物理实验的语词在2020年表现出一种“波澜不惊的正向惯性”。ATLAS和CMS探测器基于Run 2全部数据量的分析仍在井喷式产出，诸如“integrated luminosity”（积分亮度）与“upper limit(s)”（上限）的固定搭配（2011.05259，2011.05639），以及“atlas detector”与“confidence level”（置信度）的常规组合（2010.02566，2008.07949），依旧高频。与2019年那一波全积分亮度分析潮相比，2020年的这种产出更像一种平稳的延续，没有新的加速，也没有衰退，因为LHC正在处于停机升级阶段，新数据尚未到来。这种语词的恒定性，恰恰反映了大科学装置运行周期与学术产出节奏之间深刻的耦合关系——在数据获取的空窗期，物理学家们正在用成熟的数据集进行精细的测量和搜索，维持着领域的生命线。</p>
+<p>如果把2020年arXiv上的语词脉动画成一幅长卷，我们会看到三个清晰叠合的层次。表层是被疫情激起的浪花，它们来势猛烈，带着鲜明的时代印记，可能也会随着疫情的常态化而逐渐沉淀；中层是量子计算等蓄力已久的势力，它们正在加速生长，极有可能在未来几年内成长为新的叙事主干；而最深的一层，是深度学习、磁场、相变、光变曲线等早已渗透进学科血液的词语，它们不争不抢，却构成了所有研究中最稳固的语义地基。这三个层次的同时在场，让2020年的预印本语言厚度超过了以往——它不是一个单旋律的年份，而是一部多个声部交响的复调乐章。</p>
+<p>与2019年相比，这种复调特质更加明显。2019年的核心故事是深度学习从加速榜转向平台期，同时深度强化学习作为内部接棒手陡然蹿升；2020年的故事则是，外部的巨大冲击（疫情）和内部的前沿突破（量子计算）同时发生，而深度学习内部的分化（预训练-微调范式）与全科研文化的演变（开放代码常态化）也在同步进行。它们之间并未相互淹没，反而在预印本的巨大体量中各行其道，共同绘制出一幅既动荡又生机勃勃的画面。对于普通人来说，读懂这些语词脉动，就像拿到了一份科学前沿的动态心电图：你不但能看到哪些问题正在让物理学家们兴奋，也能体会到整个科学界如何在突如其来的世界性危机面前调整呼吸，以及那些真正宏大的技术转型是如何安静而有力地一步步发生的。</p>
+<p>方法说明：</p>
+<p>我们统计了2020年（以及作为对比的相邻几年）提交到arXiv预印本库的全部文章。摘要中的每一个学术短语都被视为一个独立的点，点的大小代表该短语在这一年里出现的频繁程度。如果两个短语经常出现在同一篇摘要里，它们之间就会产生一条连线，连线的粗细代表这种共同出现的频繁程度。文中所说的“热度变化”，就是基于这种频繁程度在年份之间的比较而得出的。这份统计并不代表对全部学术发表的完整覆盖，但它提供一个来自预印本高速通道的独特视角，让我们能快速感知科学前沿的语词脉动。</p>
+</div>
+  
+  <div class="qr">
+    <img class="qr-img" src="../static/contact.png" alt="二维码">
+    <div class="qr-caption">加我好友</div>
+  </div>
+  
+  <div class="footer">
+    <span class="footer-date">2026-08-04</span>
+  </div>
+</div>
+<script>
+  function loadKaTeX() {
+    if (document.querySelector("link[href*='katex']")) return;
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css";
+    document.head.appendChild(link);
+    loadScript("https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js", function () {
+      if (window.katex) {
+        loadScript("https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js");
+      }
+    });
+  }
+  function loadScript(src, onload) {
+    var s = document.createElement("script");
+    s.src = src;
+    if (onload) s.onload = onload;
+    document.head.appendChild(s);
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    if (document.body.textContent.indexOf("$") !== -1) loadKaTeX();
+  });
+  function tryRender() {
+    if (window.renderMathInElement) {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false }
+        ],
+        throwOnError: false
+      });
+      return true;
+    }
+    return false;
+  }
+  var katexTimer = setInterval(function () {
+    if (tryRender()) clearInterval(katexTimer);
+  }, 150);
+  setTimeout(function () { clearInterval(katexTimer); }, 15000);
+</script>
+</body>
+</html>
